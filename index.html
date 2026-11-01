@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UCL Load Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Elbow (UCL) stress from pitching physics: a 3D replay, every 2026 MLB arm on one map, and a risk calculator.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Ubuntu+Condensed&family=Ubuntu+Mono:wght@400;700&display=swap">
+<style>
+/* Self-hosted Ubuntu, used when Google Fonts is unreachable */
+@font-face { font-family: 'Ubuntu Self'; font-style: normal; font-display: swap; font-weight: 300; src: url(fonts/ubuntu-greek-300-normal.woff2) format('woff2'); unicode-range: U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF; }
+@font-face { font-family: 'Ubuntu Self'; font-style: normal; font-display: swap; font-weight: 300; src: url(fonts/ubuntu-latin-ext-300-normal.woff2) format('woff2'); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: 'Ubuntu Self'; font-style: normal; font-display: swap; font-weight: 300; src: url(fonts/ubuntu-latin-300-normal.woff2) format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: 'Ubuntu Self'; font-style: normal; font-display: swap; font-weight: 400; src: url(fonts/ubuntu-greek-400-normal.woff2) format('woff2'); unicode-range: U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF; }
+@font-face { font-family: 'Ubuntu Self'; font-style: normal; font-display: swap; font-weight: 400; src: url(fonts/ubuntu-latin-ext-400-normal.woff2) format('woff2'); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: 'Ubuntu Self'; font-style: normal; font-display: swap; font-weight: 400; src: url(fonts/ubuntu-latin-400-normal.woff2) format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: 'Ubuntu Self'; font-style: normal; font-display: swap; font-weight: 500; src: url(fonts/ubuntu-greek-500-normal.woff2) format('woff2'); unicode-range: U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF; }
+@font-face { font-family: 'Ubuntu Self'; font-style: normal; font-display: swap; font-weight: 500; src: url(fonts/ubuntu-latin-ext-500-normal.woff2) format('woff2'); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: 'Ubuntu Self'; font-style: normal; font-display: swap; font-weight: 500; src: url(fonts/ubuntu-latin-500-normal.woff2) format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: 'Ubuntu Self'; font-style: normal; font-display: swap; font-weight: 700; src: url(fonts/ubuntu-greek-700-normal.woff2) format('woff2'); unicode-range: U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF; }
+@font-face { font-family: 'Ubuntu Self'; font-style: normal; font-display: swap; font-weight: 700; src: url(fonts/ubuntu-latin-ext-700-normal.woff2) format('woff2'); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: 'Ubuntu Self'; font-style: normal; font-display: swap; font-weight: 700; src: url(fonts/ubuntu-latin-700-normal.woff2) format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: 'Ubuntu Self'; font-style: italic; font-display: swap; font-weight: 400; src: url(fonts/ubuntu-greek-400-italic.woff2) format('woff2'); unicode-range: U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF; }
+@font-face { font-family: 'Ubuntu Self'; font-style: italic; font-display: swap; font-weight: 400; src: url(fonts/ubuntu-latin-ext-400-italic.woff2) format('woff2'); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: 'Ubuntu Self'; font-style: italic; font-display: swap; font-weight: 400; src: url(fonts/ubuntu-latin-400-italic.woff2) format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: 'Ubuntu Condensed Self'; font-style: normal; font-display: swap; font-weight: 400; src: url(fonts/ubuntu-condensed-greek-400-normal.woff2) format('woff2'); unicode-range: U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF; }
+@font-face { font-family: 'Ubuntu Condensed Self'; font-style: normal; font-display: swap; font-weight: 400; src: url(fonts/ubuntu-condensed-latin-ext-400-normal.woff2) format('woff2'); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: 'Ubuntu Condensed Self'; font-style: normal; font-display: swap; font-weight: 400; src: url(fonts/ubuntu-condensed-latin-400-normal.woff2) format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: 'Ubuntu Mono Self'; font-style: normal; font-display: swap; font-weight: 400; src: url(fonts/ubuntu-mono-greek-400-normal.woff2) format('woff2'); unicode-range: U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF; }
+@font-face { font-family: 'Ubuntu Mono Self'; font-style: normal; font-display: swap; font-weight: 400; src: url(fonts/ubuntu-mono-latin-ext-400-normal.woff2) format('woff2'); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: 'Ubuntu Mono Self'; font-style: normal; font-display: swap; font-weight: 400; src: url(fonts/ubuntu-mono-latin-400-normal.woff2) format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: 'Ubuntu Mono Self'; font-style: normal; font-display: swap; font-weight: 700; src: url(fonts/ubuntu-mono-greek-700-normal.woff2) format('woff2'); unicode-range: U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF; }
+@font-face { font-family: 'Ubuntu Mono Self'; font-style: normal; font-display: swap; font-weight: 700; src: url(fonts/ubuntu-mono-latin-ext-700-normal.woff2) format('woff2'); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: 'Ubuntu Mono Self'; font-style: normal; font-display: swap; font-weight: 700; src: url(fonts/ubuntu-mono-latin-700-normal.woff2) format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+
+/* Layout: one column, three stops (replay → MLB map → calculator), then a short how-it-works.
+   Ubuntu family only. Cool lab-grey ground, mound-clay accent. */
+:root {
+  --bg: #f2f4f7; --surface: #ffffff; --sunk: #e9edf2;
+  --ink: #121a26; --ink-2: #47515f; --muted: #6f7988; --rule: #d9dee6; --grid: #e6eaef;
+  --clay: #b4461c; --clay-ink: #ffffff; --clay-soft: #f7e6dc;
+  --s1: #2a78d6; --s2: #eb6834;
+  --r0: #f4ece6; --r1: #f0d2bd; --r2: #e8aa86; --r3: #dc7a4f; --r4: #c24f22; --r5: #973713; --r6: #65230a;
+  --font: "Ubuntu", "Ubuntu Self", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-cond: "Ubuntu Condensed", "Ubuntu Condensed Self", "Ubuntu", "Ubuntu Self", system-ui, sans-serif;
+  --font-mono: "Ubuntu Mono", "Ubuntu Mono Self", "Ubuntu", "Ubuntu Self", ui-monospace, monospace;
+  --t-xs: 0.8125rem; --t-sm: 0.875rem; --t-md: 1rem; --t-lg: 1.1875rem; --t-xl: 1.5rem; --t-2xl: 2rem; --t-3xl: clamp(2.1rem, 5vw, 3.25rem);
+  --wide: 1120px; --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e131a; --surface: #151c26; --sunk: #1b2430; --ink: #e8ecf1; --ink-2: #b3bcc8; --muted: #8590a0;
+    --rule: #263141; --grid: #1e2835; --clay: #ee8b5e; --clay-ink: #1a0d06; --clay-soft: #3a241a;
+    --s1: #3987e5; --s2: #d95926;
+    --r0: #251d19; --r1: #44291c; --r2: #6e351d; --r3: #9c4520; --r4: #c95c2c; --r5: #e8885a; --r6: #f6bb97;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e131a; --surface: #151c26; --sunk: #1b2430; --ink: #e8ecf1; --ink-2: #b3bcc8; --muted: #8590a0;
+  --rule: #263141; --grid: #1e2835; --clay: #ee8b5e; --clay-ink: #1a0d06; --clay-soft: #3a241a;
+  --s1: #3987e5; --s2: #d95926;
+  --r0: #251d19; --r1: #44291c; --r2: #6e351d; --r3: #9c4520; --r4: #c95c2c; --r5: #e8885a; --r6: #f6bb97;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-padding-top: 60px; -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: var(--t-md); line-height: 1.6; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: var(--wide); margin: 0 auto; }
+h1, h2, h3 { margin: 0; line-height: 1.15; text-wrap: balance; }
+h1 { font-size: var(--t-3xl); font-weight: 700; letter-spacing: -0.02em; }
+h2 { font-size: var(--t-2xl); font-weight: 700; letter-spacing: -0.01em; }
+h3 { font-size: var(--t-lg); font-weight: 500; }
+p { margin: 0; }
+a { color: var(--clay); text-underline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--clay); outline-offset: 2px; border-radius: 4px; }
+.eyebrow { font-family: var(--font-cond); font-size: var(--t-sm); letter-spacing: 0.08em; text-transform: uppercase; color: var(--clay); }
+.lede { font-size: var(--t-lg); color: var(--ink-2); font-weight: 300; max-width: 60ch; }
+.muted { color: var(--muted); }
+.small { font-size: var(--t-sm); }
+
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule); }
+.nav .wrap { display: flex; align-items: center; gap: 18px; height: 52px; }
+.brand { font-weight: 700; white-space: nowrap; display: flex; align-items: center; gap: 8px; color: var(--ink); text-decoration: none; }
+.brand-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--clay); box-shadow: 0 0 0 3px var(--clay-soft); }
+.nav-links { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; min-width: 0; }
+.nav-links::-webkit-scrollbar { display: none; }
+.nav-links a { color: var(--ink-2); text-decoration: none; font-size: var(--t-sm); padding: 6px 10px; border-radius: 6px; white-space: nowrap; }
+.nav-links a:hover { background: var(--sunk); color: var(--ink); }
+
+section { padding-block: 56px; border-bottom: 1px solid var(--rule); }
+.head { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+
+/* replay */
+.hero { padding-block: 36px 48px; }
+.hero .head { margin-bottom: 20px; }
+.replay { position: relative; background: #0b0f14; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--rule); }
+.replay canvas { display: block; width: 100%; height: clamp(420px, 56vw, 600px); touch-action: none; cursor: grab; }
+.replay canvas:active { cursor: grabbing; }
+.hud { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; pointer-events: none; }
+.hud.stacked { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
+.hud-pane { position: relative; border-right: 1px solid rgba(255,255,255,0.18); }
+.hud.stacked .hud-pane { border-right: 0; border-bottom: 1px solid rgba(255,255,255,0.18); }
+.hud-pane:last-child { border: 0; }
+.tag { position: absolute; top: 12px; left: 12px; display: flex; align-items: center; gap: 8px; background: rgba(10,14,20,0.62); color: #f2f4f7; padding: 5px 10px 5px 8px; border-radius: 6px; font-family: var(--font-cond); font-size: var(--t-sm); letter-spacing: 0.05em; text-transform: uppercase; }
+.tag i { width: 10px; height: 10px; border-radius: 2px; }
+.meter { position: absolute; left: 12px; bottom: 12px; background: rgba(10,14,20,0.62); color: #f2f4f7; padding: 8px 12px 10px; border-radius: 8px; min-width: 150px; }
+.meter .k { font-family: var(--font-cond); font-size: var(--t-xs); letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.8; }
+.meter .v { font-size: 1.9rem; font-weight: 700; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.meter .v small { font-size: var(--t-sm); font-weight: 400; opacity: 0.75; margin-left: 3px; }
+.meter .bar { height: 5px; border-radius: 3px; background: rgba(255,255,255,0.18); margin-top: 6px; overflow: hidden; }
+.meter .bar span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #f2b14c, #ff5a1f); }
+.caption { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); background: rgba(10,14,20,0.72); color: #fff; padding: 6px 14px; border-radius: 6px; font-family: var(--font-cond); letter-spacing: 0.06em; text-transform: uppercase; font-size: var(--t-sm); white-space: nowrap; pointer-events: none; transition: opacity .2s; }
+.hud-pane:nth-child(2) .tag, .hud-pane:nth-child(2) .meter { left: auto; right: 12px; }
+.speed-badge { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); background: rgba(10,14,20,0.62); color: #f2f4f7; padding: 5px 9px; border-radius: 6px; font-family: var(--font-cond); font-size: var(--t-xs); letter-spacing: 0.06em; text-transform: uppercase; pointer-events: none; }
+.hud.stacked .caption { display: none; }
+.hud.stacked .speed-badge { display: none; }
+.hud.stacked .meter { min-width: 0; padding: 5px 9px 7px; bottom: 8px; }
+.hud.stacked .meter .v { font-size: 1.25rem; }
+.hud.stacked .meter .k { font-size: 0.6875rem; }
+.hud.stacked .tag { top: 8px; font-size: var(--t-xs); }
+.hud.stacked .hud-pane:first-child .meter { bottom: 8px; }
+@media (max-width: 699px) { .replay canvas { height: 600px; } }
+.nogl { color: #c9d1db; padding: 40px 20px; text-align: center; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 12px; }
+.btn { font: inherit; font-size: var(--t-sm); font-weight: 500; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 7px; padding: 7px 14px; cursor: pointer; }
+.btn:hover { border-color: var(--muted); }
+.btn.primary { background: var(--clay); color: var(--clay-ink); border-color: var(--clay); min-width: 88px; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 7px; overflow: hidden; background: var(--surface); }
+.seg button { font: inherit; font-size: var(--t-sm); color: var(--ink-2); background: transparent; border: 0; padding: 7px 11px; cursor: pointer; border-right: 1px solid var(--rule); }
+.seg button:last-child { border-right: 0; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.scrub { flex: 1 1 200px; min-width: 0; accent-color: var(--clay); }
+.punch { margin-top: 18px; font-size: var(--t-xl); font-weight: 500; line-height: 1.3; max-width: 46ch; }
+.punch b { color: var(--clay); }
+
+/* MLB map */
+.map-grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 20px; align-items: start; }
+@media (max-width: 900px) { .map-grid { grid-template-columns: minmax(0, 1fr); } }
+.card { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); padding: 16px; min-width: 0; position: relative; }
+.chart { position: relative; width: 100%; }
+.chart svg { display: block; width: 100%; }
+.chart text { font-family: var(--font); }
+.tick text, .axis-label { fill: var(--muted); font-size: 12px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: var(--t-sm); color: var(--ink-2); margin-bottom: 8px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font-size: var(--t-xs); line-height: 1.45; padding: 7px 9px; border-radius: 6px; white-space: nowrap; z-index: 5; transform: translate(-50%, calc(-100% - 12px)); font-variant-numeric: tabular-nums; }
+.search { display: flex; gap: 8px; margin-bottom: 12px; }
+.search input { flex: 1; min-width: 0; font: inherit; padding: 8px 10px; border: 1px solid var(--rule); border-radius: 7px; background: var(--bg); color: var(--ink); }
+.picked { display: flex; flex-direction: column; gap: 6px; padding: 12px 0 14px; border-bottom: 1px solid var(--rule); margin-bottom: 10px; }
+.picked .name { font-weight: 700; font-size: var(--t-lg); }
+.picked .risk { font-size: var(--t-2xl); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.toplist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.toplist li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--grid); font-size: var(--t-sm); cursor: pointer; }
+.toplist li:hover .n { color: var(--clay); }
+.toplist .n { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.toplist .d { color: var(--muted); font-size: var(--t-xs); }
+.toplist .r { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* calculator */
+.calc { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 820px) { .calc { grid-template-columns: minmax(0, 1fr); } }
+.fields { display: flex; flex-direction: column; gap: 18px; }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { display: flex; justify-content: space-between; gap: 10px; color: var(--ink-2); font-size: var(--t-sm); }
+.field output { color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; }
+.field input { width: 100%; accent-color: var(--clay); }
+.big { font-size: 3.5rem; font-weight: 700; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.riskbar { position: relative; height: 12px; border-radius: 6px; display: flex; overflow: hidden; margin-top: 14px; }
+.riskbar span { flex: 1; }
+.riskbar .mark { position: absolute; top: -3px; bottom: -3px; width: 4px; border-radius: 2px; background: var(--ink); box-shadow: 0 0 0 2px var(--surface); transform: translateX(-50%); }
+.scale { display: flex; justify-content: space-between; font-size: var(--t-xs); color: var(--muted); margin-top: 4px; font-variant-numeric: tabular-nums; }
+.kv { display: grid; grid-template-columns: minmax(0, 1fr) auto; margin-top: 18px; border-top: 1px solid var(--rule); }
+.kv > * { padding: 9px 0; border-bottom: 1px solid var(--rule); margin: 0; }
+.kv dt { color: var(--ink-2); font-size: var(--t-sm); }
+.kv dd { text-align: right; font-weight: 500; font-variant-numeric: tabular-nums; }
+
+/* how it works */
+.how { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 8px; font-size: var(--t-lg); max-width: 78ch; }
+.how li::marker { color: var(--clay); font-weight: 700; }
+footer { padding-block: 28px 40px; color: var(--muted); font-size: var(--t-sm); }
+</style>
+</head>
+<body>
+
+<header class="nav gutter">
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="brand-dot" aria-hidden="true"></span>UCL Load Lab</a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#mlb">MLB 2026</a>
+      <a href="#calc">Your arm</a>
+      <a href="#how">How it works</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero gutter">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">Pitching physics · elbow load · UCL risk</p>
+        <h1>Same velocity. Very different elbow.</h1>
+      </div>
+      <div class="replay" id="replay">
+        <canvas id="gl" aria-label="3D replay of two pitching deliveries reconstructed from motion capture"></canvas>
+        <div class="hud" id="hud">
+          <div class="hud-pane"><div class="tag" id="tag-0"></div><div class="meter"><div class="k">Elbow torque</div><div class="v" id="v-0">0<small>Nm</small></div><div class="bar"><span id="b-0"></span></div></div></div>
+          <div class="hud-pane"><div class="tag" id="tag-1"></div><div class="meter"><div class="k">Elbow torque</div><div class="v" id="v-1">0<small>Nm</small></div><div class="bar"><span id="b-1"></span></div></div></div>
+          <div class="speed-badge" id="speed-badge">¼× speed</div>
+          <div class="caption" id="caption" style="opacity:0"></div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn primary" id="play" type="button">Pause</button>
+        <input class="scrub" id="scrub" type="range" min="0" max="1000" value="0" aria-label="Time in the delivery">
+        <div class="seg" id="speed" role="group" aria-label="Speed"><button type="button" data-v="1">Real</button><button type="button" data-v="0.25" aria-pressed="true">¼×</button><button type="button" data-v="0.1">⅒×</button></div>
+        <div class="seg" id="views" role="group" aria-label="Camera"><button type="button" data-v="tv" aria-pressed="true">TV</button><button type="button" data-v="side">Side</button><button type="button" data-v="elbow">Elbow</button></div>
+      </div>
+      <p class="punch" id="punch"></p>
+    </div>
+  </section>
+
+  <section id="mlb" class="gutter">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">2026 season</p>
+        <h2>Every MLB arm on one map</h2>
+        <p class="lede">Each dot is a pitcher with 1,000+ pitches. Right means more pitches. Up means more stress on the elbow ligament per pitch, from his fastball speed and body size. Darker means higher modeled risk of a UCL injury this season.</p>
+      </div>
+      <div class="map-grid">
+        <div class="card">
+          <div class="legend" id="map-legend"></div>
+          <div class="chart" id="map"></div>
+        </div>
+        <div class="card">
+          <div class="search"><input id="q" list="names" placeholder="Find a pitcher" aria-label="Find a pitcher" autocomplete="off"><datalist id="names"></datalist></div>
+          <div class="picked" id="picked" hidden></div>
+          <p class="small muted" style="margin-bottom:6px">Highest modeled risk</p>
+          <ul class="toplist" id="toplist"></ul>
+        </div>
+      </div>
+      <p class="small muted" style="margin-top:12px">Estimates use only fastball speed, height, weight and pitch count. They don't know a pitcher's mechanics, health or rest days.</p>
+    </div>
+  </section>
+
+  <section id="calc" class="gutter">
+    <div class="wrap">
+      <div class="head">
+        <h2>Your arm</h2>
+        <p class="lede">Four numbers in, modeled season risk out. It opens on an average MLB starter.</p>
+      </div>
+      <div class="calc">
+        <div class="card fields">
+          <div class="field"><label for="c-velo">Fastball speed <output id="o-velo"></output></label><input id="c-velo" type="range" min="60" max="102" step="0.1" value="94.8"></div>
+          <div class="field"><label for="c-wt">Weight <output id="o-wt"></output></label><input id="c-wt" type="range" min="120" max="280" step="1" value="215"></div>
+          <div class="field"><label for="c-ht">Height <output id="o-ht"></output></label><input id="c-ht" type="range" min="62" max="82" step="1" value="74"></div>
+          <div class="field"><label for="c-n">Pitches this season <output id="o-n"></output></label><input id="c-n" type="range" min="100" max="3500" step="50" value="2500"></div>
+        </div>
+        <div class="card" aria-live="polite">
+          <div class="big" id="r-big">—</div>
+          <p class="muted small" style="margin-top:6px">modeled chance of a UCL fatigue injury this season</p>
+          <div class="riskbar" id="riskbar"></div>
+          <div class="scale"><span>0.1%</span><span>1%</span><span>10%</span><span>100%</span></div>
+          <dl class="kv" id="r-kv"></dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" class="gutter">
+    <div class="wrap">
+      <h2 style="margin-bottom:16px">How it works</h2>
+      <ol class="how">
+        <li>411 motion-captured pitches → physics → elbow torque (matches the lab, r = <span id="h-r">0.90</span>).</li>
+        <li>Every pitch wears down the UCL a little. More torque wears it down much faster.</li>
+        <li>Calibrated to ~49 MLB UCL injuries a year: +10% torque ≈ <span id="h-x">2</span>× the pitches.</li>
+      </ol>
+      <p class="small muted" style="margin-top:16px">Estimates only, not medical advice. Sources: <a href="https://github.com/drivelineresearch/openbiomechanics" target="_blank" rel="noopener">Driveline OpenBiomechanics</a> · <a href="https://statsapi.mlb.com" target="_blank" rel="noopener">MLB Stats API</a> · <a href="https://baseballsavant.mlb.com/leaderboard/pitch-arsenals" target="_blank" rel="noopener">Baseball Savant</a> · <a href="https://manuscript.isc.ac/Inventory/10/450572.htm" target="_blank" rel="noopener">Schechtman &amp; Bader 1997</a> · <a href="https://www.citedrive.com/en/discovery/injury-and-economic-burden-of-shoulder-and-elbow-injuries-in-major-league-baseball-pitchers-a-retrospective-11-year-analysis-2015-2025/" target="_blank" rel="noopener">Dillon et al. 2026</a></p>
+    </div>
+  </section>
+</main>
+
+<footer class="gutter"><div class="wrap">UCL Load Lab · Motion data: <a href="https://github.com/drivelineresearch/openbiomechanics" target="_blank" rel="noopener">Driveline OpenBiomechanics</a>, CC BY-NC-SA 4.0 · Research and education only, not medical advice.</div></footer>
+
+<script src="vendor/three.min.js"></script>
+<script>window.THREE || document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"><\/script>');</script>
+<script src="model.js"></script>
+<script>
+"use strict";
+(async function () {
+  const $ = (s) => document.querySelector(s);
+  const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const fmt = (v, d = 0) => (v == null || !isFinite(v)) ? "—" : v.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+  const pct = (p) => p < 0.001 ? "<0.1%" : p < 0.1 ? fmt(100 * p, 1) + "%" : fmt(100 * p, 0) + "%";
+  const ftin = (i) => `${Math.floor(i / 12)}′${i % 12}″`;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let S, A, MLB;
+  try {
+    [S, A, MLB] = await Promise.all(["data/site.json", "data/anim.json", "data/mlb.json"].map(u => fetch(u).then(r => r.json())));
+  } catch (e) {
+    $("main").insertAdjacentHTML("afterbegin", '<p class="gutter" style="padding:24px">Data files failed to load. Serve this folder over HTTP instead of opening the file directly.</p>');
+    return;
+  }
+  if (document.fonts && document.fonts.ready) await document.fonts.ready;
+  const C = S.risk.constants, SV = S.stress.size_velo_coef, H = S.risk.headline, V = S.validation;
+  const LB = 0.45359237, IN = 0.0254;
+  const P = A.pitches.slice().sort((a, b) => a.peak - b.peak);   // A = lower load
+
+  /* =================== 3D replay =================== */
+  const pitAvg = (u) => { const i = S.pitchers.cols.indexOf("torque"); const r = S.pitchers.rows.find(x => x[0] === u); return r ? r[i] : null; };
+  $("#punch").innerHTML = `Both throw about <b>88&nbsp;mph</b> and weigh about <b>100&nbsp;kg</b>. Pitcher B's elbow takes <b>${fmt(pitAvg(P[1].user) - pitAvg(P[0].user), 0)}&nbsp;Nm</b> more on every pitch.`;
+  P.forEach((p, k) => { $("#tag-" + k).innerHTML = `<i style="background:var(--s${k + 1})"></i>Pitcher ${k ? "B" : "A"} · ${fmt(p.velo, 1)} mph`; });
+
+  const THREE = window.THREE;
+  const canvas = $("#gl"), hud = $("#hud");
+  let renderer = null;
+  try { if (THREE) renderer = new THREE.WebGLRenderer({ canvas, antialias: true }); } catch (e) { renderer = null; }
+  if (!renderer) {
+    $("#replay").innerHTML = '<p class="nogl">The 3D replay needs WebGL, which this browser has turned off.</p>';
+  } else {
+    THREE.ColorManagement.legacyMode = false;
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.setScissorTest(true);
+    const V3 = (a) => new THREE.Vector3(a[0], a[1], a[2]);
+    const J = A.joints, ji = (n) => J.indexOf(n);
+
+    // --- textures drawn on canvas (no image files) ---
+    function canvasTex(w, h, draw, rep) {
+      const c = document.createElement("canvas"); c.width = w; c.height = h; draw(c.getContext("2d"), w, h);
+      const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; t.wrapS = t.wrapT = THREE.RepeatWrapping;
+      if (rep) t.repeat.set(rep[0], rep[1]); t.anisotropy = 4; return t;
+    }
+    function noise(g, w, h, base, amp, n) {
+      g.fillStyle = base; g.fillRect(0, 0, w, h);
+      for (let i = 0; i < n; i++) { const a = Math.random() * amp; g.fillStyle = Math.random() < 0.5 ? `rgba(0,0,0,${a})` : `rgba(255,255,255,${a * 0.6})`; g.fillRect(Math.random() * w, Math.random() * h, 1 + Math.random() * 2, 1 + Math.random() * 2); }
+    }
+    const grassTex = canvasTex(256, 256, (g, w, h) => { noise(g, w, h, "#3f7a3a", 0.10, 9000); g.fillStyle = "rgba(255,255,255,0.06)"; g.fillRect(0, 0, w / 2, h); }, [50, 50]);
+    const dirtTex = canvasTex(256, 256, (g, w, h) => noise(g, w, h, "#9c6a45", 0.16, 12000), [6, 6]);
+    const crowdTex = canvasTex(256, 256, (g, w, h) => {
+      g.fillStyle = "#2a3340"; g.fillRect(0, 0, w, h);
+      const cols = ["#d8d4cc", "#9aa5b4", "#5d6b7d", "#b8423a", "#2f5f9e", "#e6c79c", "#3c3c3c", "#8a5a44"];
+      for (let i = 0; i < 2600; i++) { g.fillStyle = cols[(Math.random() * cols.length) | 0]; g.globalAlpha = 0.55 + Math.random() * 0.45; g.fillRect(Math.random() * w, Math.random() * h, 2, 3); }
+      g.globalAlpha = 1; g.fillStyle = "rgba(0,0,0,0.35)"; for (let x = 0; x < w; x += 16) g.fillRect(x, 0, 3, h);
+    }, [4, 16]);
+    const glowTex = canvasTex(128, 128, (g, w, h) => { const r = g.createRadialGradient(64, 64, 0, 64, 64, 64); r.addColorStop(0, "rgba(255,230,180,1)"); r.addColorStop(0.35, "rgba(255,120,40,0.65)"); r.addColorStop(1, "rgba(255,60,0,0)"); g.fillStyle = r; g.fillRect(0, 0, w, h); });
+
+    const moundZ = (x, y) => {
+      const r = Math.hypot(x - 0.45, y), top = x <= 0.15 ? 0 : Math.max(-0.254, -(x - 0.15) / 12);
+      const t = Math.min(1, Math.max(0, (r - 2.3) / 0.75)), s = t * t * (3 - 2 * t);
+      return -0.254 + (top + 0.254) * (1 - s);
+    };
+    const geo = { cyl: new THREE.CylinderGeometry(1, 1, 1, 18, 1), sph: new THREE.SphereGeometry(1, 22, 16), torso: new THREE.CylinderGeometry(0.17, 0.13, 1, 22, 1) };
+    const PLATE_X = 18.44;
+
+    function buildWorld(scene) {
+      scene.background = new THREE.Color("#9fbad6");
+      scene.fog = new THREE.Fog("#9fbad6", 45, 160);
+      scene.add(new THREE.HemisphereLight("#e8f0ff", "#5a6b3a", 0.75));
+      const sun = new THREE.DirectionalLight("#fff4e2", 2.2);
+      sun.position.set(-4, -7, 12); sun.target.position.set(1, 0, 0.6);
+      sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+      Object.assign(sun.shadow.camera, { left: -3.5, right: 3.5, top: 3.5, bottom: -3.5, near: 1, far: 30 });
+      sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.02;
+      scene.add(sun, sun.target);
+      const grass = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshStandardMaterial({ map: grassTex, roughness: 0.95 }));
+      grass.position.z = -0.256; grass.receiveShadow = true; scene.add(grass);
+      const dirtMat = new THREE.MeshStandardMaterial({ map: dirtTex, roughness: 1 });
+      const mg = new THREE.RingGeometry(0.001, 3.25, 120, 36), pos = mg.attributes.position;
+      for (let i = 0; i < pos.count; i++) { const x = pos.getX(i) + 0.45, y = pos.getY(i); pos.setZ(i, moundZ(x, y) + 0.001); }
+      mg.computeVertexNormals();
+      const mound = new THREE.Mesh(mg, dirtMat); mound.position.x = 0.45; mound.receiveShadow = true; scene.add(mound);
+      const white = new THREE.MeshStandardMaterial({ color: "#f4f4f2", roughness: 0.6 });
+      const rubber = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.61, 0.03), white); rubber.position.set(-0.08, 0, 0.005); rubber.receiveShadow = true; scene.add(rubber);
+      const home = new THREE.Mesh(new THREE.CircleGeometry(3.96, 64), dirtMat); home.position.set(PLATE_X - 0.3, 0, -0.253); home.receiveShadow = true; scene.add(home);
+      const ps = new THREE.Shape([[18.01, -0.216], [18.01, 0.216], [18.226, 0.216], [18.44, 0], [18.226, -0.216]].map(p => new THREE.Vector2(p[0], p[1])));
+      const plate = new THREE.Mesh(new THREE.ShapeGeometry(ps), white); plate.position.z = -0.25; scene.add(plate);
+      const chalk = (x0, y0, x1, y1, w) => { const dx = x1 - x0, dy = y1 - y0, L = Math.hypot(dx, dy); const m = new THREE.Mesh(new THREE.PlaneGeometry(L, w), white); m.position.set((x0 + x1) / 2, (y0 + y1) / 2, -0.251); m.rotation.z = Math.atan2(dy, dx); scene.add(m); };
+      [-1, 1].forEach(sd => { const yi = sd * 0.37, yo = sd * 1.59, x0 = 17.3, x1 = 19.13; chalk(x0, yi, x1, yi, 0.05); chalk(x0, yo, x1, yo, 0.05); chalk(x0, yi, x0, yo, 0.05); chalk(x1, yi, x1, yo, 0.05); });
+      [-1, 1].forEach(sd => chalk(PLATE_X, 0, PLATE_X - 40, sd * 40, 0.08));
+      const wall = new THREE.Mesh(new THREE.BoxGeometry(0.6, 90, 1.8), new THREE.MeshStandardMaterial({ color: "#1d2b3c", roughness: 0.9 }));
+      wall.position.set(PLATE_X + 18, 0, 0.65); scene.add(wall);
+      // seating bowl behind the plate: a crowd-textured slope rising away from the field
+      const slope = new THREE.Vector3(Math.cos(0.6), 0, Math.sin(0.6)), base = new THREE.Vector3(PLATE_X + 18.4, 0, 1.5);
+      const stands = new THREE.Mesh(new THREE.PlaneGeometry(44, 150), new THREE.MeshStandardMaterial({ map: crowdTex, roughness: 1 }));
+      const ctr = base.clone().addScaledVector(slope, 22); stands.position.copy(ctr);
+      stands.lookAt(ctr.clone().add(new THREE.Vector3(-Math.sin(0.6), 0, Math.cos(0.6)))); scene.add(stands);
+      return sun;
+    }
+
+    function buildFigure(scene, capColor) {
+      const M = (c, r = 0.8) => new THREE.MeshStandardMaterial({ color: c, roughness: r });
+      const mat = { jersey: M("#e3e6ea"), pants: M("#dadde2"), sleeve: M("#26303f"), skin: M("#a8846b", 0.7), dark: M("#171b22", 0.6), glove: M("#6b3d20", 0.6), cap: M(capColor, 0.6) };
+      const hot = new THREE.MeshStandardMaterial({ color: "#26303f", roughness: 0.6, emissive: new THREE.Color("#ff5a1f"), emissiveIntensity: 0 });
+      const hotJoint = new THREE.MeshStandardMaterial({ color: "#26303f", roughness: 0.5, emissive: new THREE.Color("#ffae42"), emissiveIntensity: 0 });
+      const add = (g, m) => { const o = new THREE.Mesh(g, m); o.castShadow = true; scene.add(o); return o; };
+      const cyl = (m) => add(geo.cyl, m), sph = (m) => add(geo.sph, m);
+      const f = {
+        bones: [
+          ["rear_ankle_jc", "rear_knee_jc", 0.055, cyl(mat.pants)], ["rear_knee_jc", "rear_hip", 0.085, cyl(mat.pants)],
+          ["lead_ankle_jc", "lead_knee_jc", 0.055, cyl(mat.pants)], ["lead_knee_jc", "lead_hip", 0.085, cyl(mat.pants)],
+          ["rear_hip", "lead_hip", 0.105, cyl(mat.pants)], ["shoulder_jc", "glove_shoulder_jc", 0.075, cyl(mat.jersey)],
+          ["shoulder_jc", "elbow_jc", 0.052, cyl(mat.sleeve)], ["glove_shoulder_jc", "glove_elbow_jc", 0.052, cyl(mat.sleeve)],
+          ["glove_elbow_jc", "glove_wrist_jc", 0.043, cyl(mat.sleeve)], ["elbow_jc", "wrist_jc", 0.045, cyl(hot)],
+          ["wrist_jc", "hand_jc", 0.035, cyl(mat.skin)], ["glove_wrist_jc", "glove_hand_jc", 0.04, cyl(mat.glove)],
+        ],
+        joints: [["rear_knee_jc", 0.06, mat.pants], ["lead_knee_jc", 0.06, mat.pants], ["rear_hip", 0.1, mat.pants], ["lead_hip", 0.1, mat.pants],
+          ["shoulder_jc", 0.075, mat.jersey], ["glove_shoulder_jc", 0.075, mat.jersey], ["glove_elbow_jc", 0.05, mat.sleeve],
+          ["wrist_jc", 0.038, mat.skin], ["hand_jc", 0.045, mat.skin], ["glove_wrist_jc", 0.045, mat.glove]].map(([n, r, m]) => [n, r, sph(m)]),
+        torso: add(geo.torso, mat.jersey), neck: cyl(mat.skin), head: sph(mat.skin), elbow: sph(hotJoint),
+        glove: add(new THREE.SphereGeometry(0.1, 20, 14), mat.glove),
+        feet: [add(new THREE.BoxGeometry(0.27, 0.1, 0.08), mat.dark), add(new THREE.BoxGeometry(0.27, 0.1, 0.08), mat.dark)],
+        cap: new THREE.Group(), hot, hotJoint,
+      };
+      const dome = new THREE.Mesh(new THREE.SphereGeometry(0.112, 22, 12, 0, Math.PI * 2, 0, Math.PI / 2), mat.cap); dome.castShadow = true;
+      const brim = new THREE.Mesh(new THREE.BoxGeometry(0.17, 0.012, 0.1), mat.cap); brim.position.set(0, 0.005, 0.12); brim.castShadow = true;
+      f.cap.add(dome, brim); scene.add(f.cap);
+      const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: "#ffffff", blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0 }));
+      scene.add(glow); f.glow = glow;
+      f.ball = add(new THREE.SphereGeometry(0.037, 20, 14), new THREE.MeshStandardMaterial({ color: "#fbfaf6", roughness: 0.45, emissive: "#ffffff", emissiveIntensity: 0.15 }));
+      f.ghosts = [0.5, 0.32, 0.2, 0.11].map(o => { const g = new THREE.Mesh(f.ball.geometry, new THREE.MeshBasicMaterial({ color: "#ffffff", transparent: true, opacity: o, depthWrite: false })); scene.add(g); return g; });
+      return f;
+    }
+
+    const Y = new THREE.Vector3(0, 1, 0), tmp = new THREE.Vector3(), tmp2 = new THREE.Vector3();
+    function setCyl(m, a, b, r) { tmp.subVectors(b, a); const L = tmp.length(); m.position.copy(a).addScaledVector(tmp, 0.5); m.quaternion.setFromUnitVectors(Y, tmp.divideScalar(L || 1)); m.scale.set(r, L, r); }
+    function setSph(m, a, r) { m.position.copy(a); m.scale.setScalar(r); }
+
+    const G = new THREE.Vector3(0, 0, -9.81);
+    const views = P.map((p, k) => {
+      const scene = new THREE.Scene();
+      const sun = buildWorld(scene);
+      const fig = buildFigure(scene, k ? "#d95926" : "#2a78d6");
+      // ball flight after release: aim at the middle of the zone, solve the launch velocity under gravity
+      const last = (n) => V3(p.frames[p.t.findIndex(t => t >= 0)][ji(n)]);
+      const R = last("hand_jc").clone().add(last("hand_jc").sub(last("wrist_jc")).multiplyScalar(0.5));
+      const target = new THREE.Vector3(PLATE_X - 0.2, 0, 0.5), speed = p.velo * 0.44704;
+      const T = target.distanceTo(R) / (speed * 0.96);
+      const v0 = target.clone().sub(R).sub(G.clone().multiplyScalar(0.5 * T * T)).divideScalar(T);
+      return { p, scene, sun, fig, R, v0, T };
+    });
+
+    function frameAt(p, t) {
+      const n = p.t.length; if (t <= p.t[0]) return { a: 0, b: 0, u: 0 }; if (t >= p.t[n - 1]) return { a: n - 1, b: n - 1, u: 0 };
+      let lo = 0, hi = n - 1; while (hi - lo > 1) { const m = (lo + hi) >> 1; if (p.t[m] <= t) lo = m; else hi = m; }
+      return { a: lo, b: hi, u: (t - p.t[lo]) / (p.t[hi] - p.t[lo]) };
+    }
+    const VMAX = 200;
+    function pose(v, t) {
+      const { p, fig } = v, f = frameAt(p, t);
+      const P3 = (n) => { const a = p.frames[f.a][ji(n)], b = p.frames[f.b][ji(n)]; return new THREE.Vector3(a[0] + (b[0] - a[0]) * f.u, a[1] + (b[1] - a[1]) * f.u, a[2] + (b[2] - a[2]) * f.u); };
+      const pts = {}; J.forEach(n => { pts[n] = P3(n); });
+      fig.bones.forEach(([a, b, r, m]) => setCyl(m, pts[a], pts[b], r));
+      fig.joints.forEach(([n, r, m]) => setSph(m, pts[n], r));
+      const mh = pts.rear_hip.clone().add(pts.lead_hip).multiplyScalar(0.5);
+      setCyl(fig.torso, mh, pts.thorax_prox, 1); fig.torso.scale.set(1, fig.torso.scale.y, 0.8);
+      const up = pts.thorax_prox.clone().sub(pts.thorax_dist).normalize();
+      const head = pts.thorax_prox.clone().addScaledVector(up, 0.21);
+      setCyl(fig.neck, pts.thorax_prox, head, 0.05); setSph(fig.head, head, 0.105);
+      const fwd = new THREE.Vector3().crossVectors(up, pts.shoulder_jc.clone().sub(pts.glove_shoulder_jc)).normalize();
+      const right = new THREE.Vector3().crossVectors(up, fwd).normalize(), fw2 = new THREE.Vector3().crossVectors(right, up);
+      fig.cap.position.copy(head).addScaledVector(up, 0.02);
+      fig.cap.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(right, up, fw2));
+      setSph(fig.glove, pts.glove_hand_jc, 1);
+      [["rear_ankle_jc", new THREE.Vector3(0.15, -1, 0)], ["lead_ankle_jc", new THREE.Vector3(1, -0.15, 0)]].forEach(([n, d], i) => {
+        const ft = fig.feet[i], a = pts[n]; d.normalize();
+        ft.position.copy(a).addScaledVector(d, 0.07); ft.position.z = Math.max(a.z - 0.05, moundZ(ft.position.x, ft.position.y) + 0.04);
+        ft.rotation.set(0, 0, Math.atan2(d.y, d.x));
+      });
+      // elbow load
+      const fi = f.a + (f.b - f.a) * f.u, i0 = Math.floor(fi), i1 = Math.min(i0 + 1, p.varus.length - 1);
+      const varus = Math.max(0, p.varus[i0] + (p.varus[i1] - p.varus[i0]) * (fi - i0));
+      const L = Math.min(1, varus / VMAX), heat = Math.max(0, (varus - 60) / (VMAX - 60));
+      setSph(fig.elbow, pts.elbow_jc, 0.058);
+      fig.hot.emissiveIntensity = 2.6 * heat * heat; fig.hotJoint.emissiveIntensity = 5 * heat * heat;
+      fig.glow.position.copy(pts.elbow_jc); fig.glow.material.opacity = Math.min(1, 1.5 * heat * heat); fig.glow.scale.setScalar((view === "elbow" ? 0.1 : 0.15) + (view === "elbow" ? 0.35 : 0.65) * heat);
+      // ball
+      const ballAt = (tt) => tt <= 0 ? pts.hand_jc.clone().add(pts.hand_jc.clone().sub(pts.wrist_jc).multiplyScalar(0.5))
+        : v.R.clone().addScaledVector(v.v0, Math.min(tt, v.T + 0.05)).addScaledVector(G, 0.5 * Math.min(tt, v.T + 0.05) ** 2);
+      fig.ball.position.copy(ballAt(t)); fig.ball.visible = t < v.T + 0.15;
+      fig.ghosts.forEach((g, i) => { const tt = t - (i + 1) * 0.008; g.position.copy(tt > 0 ? ballAt(tt) : fig.ball.position); g.visible = t > 0.004 && t < v.T + 0.05; });
+      v.sun.target.position.set(Math.max(mh.x, 0.5), 0, 0.5); v.sun.position.set(v.sun.target.position.x - 4, -7, 12);
+      return { varus, elbow: pts.elbow_jc, mh };
+    }
+
+    // --- cameras ---
+    const camera = new THREE.PerspectiveCamera(30, 1, 0.05, 400); camera.up.set(0, 0, 1);
+    const PRESETS = {
+      tv:   { pos: new THREE.Vector3(-62, 4.0, 9.6), tgt: new THREE.Vector3(7.5, -0.35, 1.0), fov: 4.3 },
+      side: { pos: new THREE.Vector3(1.1, -8.5, 1.35), tgt: new THREE.Vector3(1.0, 0, 1.05), fov: 30 },
+      elbow: { pos: null, tgt: null, fov: 34 },
+    };
+    let view = "tv", cam = { pos: PRESETS.tv.pos.clone(), tgt: PRESETS.tv.tgt.clone(), fov: PRESETS.tv.fov }, camTo = null, orbit = null;
+    function presetFor(name, poses) {
+      if (name !== "elbow") return PRESETS[name];
+      const e = poses[0].elbow.clone().add(poses[1].elbow).multiplyScalar(0.5);
+      return { pos: e.clone().add(new THREE.Vector3(0.6, -2.8, 0.15)), tgt: e.clone().add(new THREE.Vector3(0, 0, -0.15)), fov: 32 };
+    }
+
+    // --- time ---
+    const tStart = Math.max(P[0].t[0], P[1].t[0]) + 0.05, tEnd = 0.5;
+    const MER = Math.max(...P.map(p => p.events.MER_time));
+    let t = reduce ? MER : tStart, speed = 0.25, playing = !reduce, last = null, hold = 0, held = false;
+    const EVENTS = [[P[0].events.fp_100_time, "Foot plant"], [P[0].events.MER_time, "Max layback · peak elbow load"], [0, "Release"]];
+
+    function layout() {
+      const w = canvas.clientWidth, h = canvas.clientHeight, dpr = Math.min(devicePixelRatio || 1, 2);
+      renderer.setPixelRatio(dpr); renderer.setSize(w, h, false);
+      const stacked = w < 700; hud.classList.toggle("stacked", stacked);
+      return { w, h, stacked };
+    }
+    let L0 = layout();
+    new ResizeObserver(() => { L0 = layout(); draw(); }).observe(canvas);
+
+    function draw() {
+      const poses = views.map(v => pose(v, t));
+      // camera: preset, smooth transition, or user orbit
+      const pre = presetFor(view, poses);
+      if (orbit) { cam.pos.copy(orbit.tgt).add(new THREE.Vector3().setFromSphericalCoords(orbit.r, orbit.phi, orbit.theta).applyAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2)); cam.tgt.copy(orbit.tgt); }
+      else if (camTo) {
+        const a = Math.min(1, (performance.now() - camTo.t0) / 700), e = a * a * (3 - 2 * a);
+        cam.pos.lerpVectors(camTo.from.pos, pre.pos, e); cam.tgt.lerpVectors(camTo.from.tgt, pre.tgt, e); cam.fov = camTo.from.fov + (pre.fov - camTo.from.fov) * e;
+        if (a >= 1) camTo = null;
+      } else { cam.pos.copy(pre.pos); cam.tgt.copy(pre.tgt); cam.fov = pre.fov; }
+      const { w, h, stacked } = L0;
+      views.forEach((v, k) => {
+        const vw = stacked ? w : w / 2, vh = stacked ? h / 2 : h, x = stacked ? 0 : k * vw, y = stacked ? (k ? 0 : h / 2) : 0;
+        camera.aspect = vw / vh;
+        // keep the TV framing similar when the pane is narrow
+        camera.fov = cam.fov * (view === "tv" && !orbit ? (stacked ? 0.8 : Math.max(1, 1.15 / camera.aspect)) : 1);
+        camera.position.copy(cam.pos); camera.lookAt(cam.tgt); camera.updateProjectionMatrix();
+        renderer.setViewport(x, y, vw, vh); renderer.setScissor(x, y, vw, vh);
+        renderer.render(v.scene, camera);
+        $("#v-" + k).innerHTML = `${fmt(poses[k].varus, 0)}<small>Nm</small>`;
+        $("#b-" + k).style.width = Math.min(100, poses[k].varus / VMAX * 100) + "%";
+      });
+      const ev = held ? EVENTS[1] : EVENTS.filter(([te]) => t >= te - 0.002 && t - te < 0.03).pop();
+      $("#caption").style.opacity = ev ? 1 : 0; if (ev) $("#caption").textContent = ev[1];
+      $("#scrub").value = Math.round(1000 * (t - tStart) / (tEnd - tStart));
+    }
+
+    function loop(ts) {
+      if (!playing) { last = null; return; }
+      if (last != null) {
+        const dt = Math.min(0.05, (ts - last) / 1000);
+        if (hold > 0) { hold -= dt; if (hold <= 0) held = false; }
+        else {
+          const prev = t; t += dt * speed;
+          if (speed < 1 && prev < MER - 0.004 && t >= MER - 0.004) { t = MER - 0.004; hold = 1.3; held = true; }   // freeze at peak load
+          if (t > tEnd) { t = tStart; }
+        }
+      }
+      last = ts; draw(); requestAnimationFrame(loop);
+    }
+    function setPlaying(v) { playing = v; $("#play").textContent = v ? "Pause" : "Play"; if (v) requestAnimationFrame(loop); }
+    $("#play").addEventListener("click", () => setPlaying(!playing));
+    $("#scrub").addEventListener("input", e => { setPlaying(false); hold = 0; held = false; t = tStart + (tEnd - tStart) * e.target.value / 1000; draw(); });
+    function seg(id, cb) { const g = $(id); g.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; g.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); cb(b.dataset.v); }); }
+    seg("#speed", v => { speed = +v; $("#speed-badge").textContent = speed === 1 ? "Real speed" : speed === 0.25 ? "¼× speed" : "⅒× speed"; });
+    seg("#views", v => { camTo = { from: { pos: cam.pos.clone(), tgt: cam.tgt.clone(), fov: cam.fov }, t0: performance.now() }; orbit = null; view = v; if (!playing) { const tick = () => { draw(); if (camTo) requestAnimationFrame(tick); }; tick(); } });
+    // drag to orbit around the current target
+    let drag = null;
+    canvas.addEventListener("pointerdown", e => {
+      const off = cam.pos.clone().sub(cam.tgt).applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2), s = new THREE.Spherical().setFromVector3(off);
+      orbit = { tgt: cam.tgt.clone(), r: s.radius, phi: s.phi, theta: s.theta }; camTo = null;
+      drag = { x: e.clientX, y: e.clientY, phi: s.phi, theta: s.theta }; canvas.setPointerCapture(e.pointerId);
+      $("#views").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", false));
+    });
+    canvas.addEventListener("pointermove", e => { if (!drag) return; orbit.theta = drag.theta - (e.clientX - drag.x) * 0.006; orbit.phi = Math.min(Math.PI - 0.05, Math.max(0.05, drag.phi - (e.clientY - drag.y) * 0.006)); if (!playing) draw(); });
+    canvas.addEventListener("pointerup", () => { drag = null; });
+    // pause rendering when off screen
+    new IntersectionObserver(es => es.forEach(en => { if (!en.isIntersecting && playing) { setPlaying(false); canvas.dataset.auto = "1"; } else if (en.isIntersecting && canvas.dataset.auto) { delete canvas.dataset.auto; setPlaying(true); } })).observe(canvas);
+    draw(); setPlaying(playing);
+  }
+
+  /* =================== MLB map =================== */
+  const NS = "http://www.w3.org/2000/svg";
+  const el = (tag, at, par) => { const n = document.createElementNS(NS, tag); for (const k in at) n.setAttribute(k, at[k]); if (par) par.appendChild(n); return n; };
+  const mc = MLB.cols, ROWS = MLB.rows.map(r => Object.fromEntries(mc.map((c, i) => [c, r[i]])));
+  const BINS = [0, 0.01, 0.02, 0.05, 0.1, 0.2, 0.4, 1.01], BL = ["<1%", "1–2%", "2–5%", "5–10%", "10–20%", "20–40%", "40%+"];
+  const binOf = (p) => BINS.findIndex((b, i) => p >= b && p < BINS[i + 1]);
+  let selected = null;
+  $("#map-legend").innerHTML = BL.slice(0, 5).map((l, i) => `<span><i style="background:var(--r${i})"></i>${l}</span>`).join("") + `<span><i style="background:var(--ink);border-radius:50%;width:9px;height:9px"></i>Pitcher</span>`;
+  function drawMap() {
+    const host = $("#map"); host.innerHTML = "";
+    const w = Math.max(300, host.clientWidth), h = w < 560 ? 380 : 440, m = { l: 50, r: 14, t: 8, b: 40 };
+    const svg = el("svg", { viewBox: `0 0 ${w} ${h}`, width: w, height: h, role: "img", "aria-label": "Map of 2026 MLB pitchers by pitch count and elbow stress" }, host);
+    const tip = document.createElement("div"); tip.className = "tip"; tip.hidden = true; host.appendChild(tip);
+    const X0 = 900, X1 = 3400, Y0 = 29.5, Y1 = 39;
+    const x = v => m.l + (v - X0) / (X1 - X0) * (w - m.l - m.r), y = v => h - m.b - (v - Y0) / (Y1 - Y0) * (h - m.t - m.b);
+    const nx = 50, ny = 38, dx = (X1 - X0) / nx, dy = (Y1 - Y0) / ny;
+    const g = el("g", {}, svg);
+    for (let i = 0; i < nx; i++) for (let j = 0; j < ny; j++) {
+      const W = X0 + (i + 0.5) * dx, Sx = Y0 + (j + 0.5) * dy, r = UCL.riskFromStress(C, Sx, W);
+      el("rect", { x: x(X0 + i * dx), y: y(Y0 + (j + 1) * dy), width: x(X0 + dx) - x(X0) + 0.6, height: y(Y0) - y(Y0 + dy) + 0.6, fill: css("--r" + binOf(r)) }, g);
+    }
+    const tk = el("g", { class: "tick" }, svg);
+    [1000, 1500, 2000, 2500, 3000].forEach(v => { const t = el("text", { x: x(v), y: h - m.b + 18, "text-anchor": "middle" }, tk); t.textContent = fmt(v); });
+    [30, 32, 34, 36, 38].forEach(v => { const t = el("text", { x: m.l - 8, y: y(v) + 4, "text-anchor": "end" }, tk); t.textContent = v + "%"; });
+    const xl = el("text", { x: (m.l + w - m.r) / 2, y: h - 6, "text-anchor": "middle", class: "axis-label" }, svg); xl.textContent = "Pitches thrown in 2026";
+    const yl = el("text", { x: 13, y: (m.t + h - m.b) / 2, transform: `rotate(-90 13 ${(m.t + h - m.b) / 2})`, "text-anchor": "middle", class: "axis-label" }, svg); yl.textContent = "Elbow ligament stress per pitch";
+    const dots = el("g", {}, svg);
+    ROWS.forEach(r => {
+      const isSel = selected && r.name === selected.name;
+      el("circle", { cx: x(r.pitches), cy: y(r.stress), r: isSel ? 7 : 4, fill: isSel ? css("--clay") : css("--ink"), "fill-opacity": isSel ? 1 : 0.72, stroke: css("--surface"), "stroke-width": isSel ? 2.5 : 1 }, dots);
+    });
+    if (selected) { const t = el("text", { x: x(selected.pitches) + 11, y: y(selected.stress) + 4, fill: css("--ink"), "font-size": 13, "font-weight": 700, stroke: css("--surface"), "stroke-width": 4, "paint-order": "stroke" }, svg); t.textContent = selected.name; if (x(selected.pitches) > w - 160) { t.setAttribute("x", x(selected.pitches) - 11); t.setAttribute("text-anchor", "end"); } }
+    const near = (e) => { const b = svg.getBoundingClientRect(), mx = (e.clientX - b.left) * w / b.width, my = (e.clientY - b.top) * h / b.height; let best = null, bd = 144; ROWS.forEach(r => { const d = (x(r.pitches) - mx) ** 2 + (y(r.stress) - my) ** 2; if (d < bd) { bd = d; best = r; } }); return best; };
+    svg.addEventListener("pointermove", e => { const r = near(e); if (!r) { tip.hidden = true; svg.style.cursor = ""; return; } svg.style.cursor = "pointer"; tip.hidden = false; tip.style.left = Math.min(Math.max(x(r.pitches), 90), w - 90) + "px"; tip.style.top = y(r.stress) + "px"; tip.innerHTML = `<b>${r.name}</b> · ${r.role}<br>${fmt(r.pitches)} pitches · ${fmt(r.velo, 1)} mph<br>season risk <b>${pct(r.risk)}</b>`; });
+    svg.addEventListener("pointerleave", () => { tip.hidden = true; });
+    svg.addEventListener("click", e => { const r = near(e); if (r) pick(r); });
+  }
+  function pick(r) {
+    selected = r; drawMap();
+    const box = $("#picked"); box.hidden = false;
+    box.innerHTML = `<span class="name">${r.name}</span><span class="small muted">${r.role === "SP" ? "Starter" : "Reliever"} · ${fmt(r.pitches)} pitches · ${fmt(r.velo, 1)} mph · ${ftin(r.height_in)}, ${r.weight_lb} lb</span><span class="risk">${pct(r.risk)}</span><span class="small muted">modeled season risk · est. elbow torque ${fmt(r.torque, 0)} Nm</span><button class="btn" type="button" id="to-calc" style="align-self:flex-start;margin-top:4px">Open in calculator</button>`;
+    $("#to-calc").addEventListener("click", () => { setCalc(r.velo, r.weight_lb, r.height_in, r.pitches); $("#calc").scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); });
+  }
+  $("#names").innerHTML = ROWS.map(r => `<option value="${r.name}">`).join("");
+  $("#q").addEventListener("input", e => { const q = e.target.value.trim().toLowerCase(); const r = ROWS.find(x => x.name.toLowerCase() === q) || (q.length > 3 ? ROWS.find(x => x.name.toLowerCase().includes(q)) : null); if (r) pick(r); });
+  $("#toplist").innerHTML = ROWS.slice(0, 8).map((r, i) => `<li data-i="${i}" tabindex="0"><span><span class="n">${r.name}</span><br><span class="d">${fmt(r.pitches)} pitches · ${fmt(r.velo, 1)} mph</span></span><span class="r">${pct(r.risk)}</span></li>`).join("");
+  $("#toplist").addEventListener("click", e => { const li = e.target.closest("li"); if (li) pick(ROWS[+li.dataset.i]); });
+  $("#toplist").addEventListener("keydown", e => { if (e.key === "Enter") { const li = e.target.closest("li"); if (li) pick(ROWS[+li.dataset.i]); } });
+  drawMap();
+  let lw = innerWidth; addEventListener("resize", () => { if (innerWidth !== lw) { lw = innerWidth; drawMap(); } });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawMap);
+  new MutationObserver(drawMap).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  /* =================== calculator =================== */
+  $("#riskbar").innerHTML = [0, 1, 2, 3, 4, 5, 6].map(i => `<span style="background:var(--r${i})"></span>`).join("") + `<div class="mark" id="mark"></div>`;
+  const val = (id) => +$("#" + id).value;
+  function calc() {
+    const mph = val("c-velo"), lb = val("c-wt"), inch = val("c-ht"), n = val("c-n");
+    $("#o-velo").textContent = fmt(mph, 1) + " mph"; $("#o-wt").textContent = lb + " lb"; $("#o-ht").textContent = ftin(inch); $("#o-n").textContent = fmt(n);
+    const kg = lb * LB, tau = UCL.torqueFromSizeVelo(SV, mph, kg, inch * IN), Sx = UCL.stressFromTorque(C, tau, kg);
+    const r = UCL.riskFromStress(C, Sx, n), r90 = UCL.riskFromStress(C, 0.9 * Sx, n), rHalf = UCL.riskFromStress(C, Sx, n / 2);
+    $("#r-big").textContent = pct(r);
+    $("#mark").style.left = Math.min(100, Math.max(0, (Math.log10(Math.max(r, 1e-3)) + 3) / 3 * 100)) + "%";
+    $("#r-kv").innerHTML = [
+      ["Elbow torque per pitch", `${fmt(tau, 0)} Nm`],
+      ["Ligament stress per pitch", `${fmt(Sx, 1)}% of its strength`],
+      ["If elbow torque were 10% lower", pct(r90)],
+      ["If you threw half as many pitches", pct(rHalf)],
+    ].map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
+  }
+  function setCalc(mph, lb, inch, n) { $("#c-velo").value = mph; $("#c-wt").value = lb; $("#c-ht").value = inch; $("#c-n").value = Math.round(n / 50) * 50; calc(); }
+  ["c-velo", "c-wt", "c-ht", "c-n"].forEach(id => $("#" + id).addEventListener("input", calc));
+  calc();
+
+  /* =================== how it works =================== */
+  $("#h-r").textContent = fmt(V.r, 2); $("#h-x").textContent = fmt(H.workload_equiv_multiplier, 0);
+})();
+</script>
+</body>
+</html>
