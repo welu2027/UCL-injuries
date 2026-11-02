@@ -1,0 +1,5 @@
+# Cloudflare Pages: `npx wrangler pages deploy` from the repo root, or connect the repo in the
+# dashboard with no build command and "public" as the build output directory.
+name = "ucl-load-lab"
+pages_build_output_dir = "./public"
+compatibility_date = "2026-10-01"

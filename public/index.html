@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>UCL Load Lab</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Elbow (UCL) stress from pitching physics: a 3D replay, every 2026 MLB arm on one map, and a risk calculator.">
+<meta name="description" content="Elbow (UCL) stress from pitching physics: a 3D replay, a build-your-pitcher mode, every 2026 MLB arm on one map, and a risk calculator.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -68,6 +68,7 @@
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { scroll-padding-top: 60px; -webkit-text-size-adjust: 100%; }
 body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: var(--t-md); line-height: 1.6; }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
@@ -137,6 +138,18 @@ section { padding-block: 56px; border-bottom: 1px solid var(--rule); }
 .seg button:last-child { border-right: 0; }
 .seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
 .scrub { flex: 1 1 200px; min-width: 0; accent-color: var(--clay); }
+.modes { display: inline-flex; margin-bottom: 12px; }
+.modes button { padding: 8px 14px; font-weight: 500; }
+.hud.build { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+.hud .bld { border: 0; }
+.meter .sub { font-size: var(--t-xs); opacity: 0.8; margin-top: 5px; font-variant-numeric: tabular-nums; }
+.hint { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); background: rgba(10,14,20,0.62); color: #ffd7b8; padding: 5px 10px; border-radius: 6px; font-family: var(--font-cond); font-size: var(--t-xs); letter-spacing: 0.06em; text-transform: uppercase; pointer-events: none; white-space: nowrap; }
+@media (max-width: 559px) { .hint { left: 12px; top: 46px; transform: none; } }
+.chip { position: absolute; background: rgba(10,14,20,0.7); color: #f2f4f7; padding: 3px 8px; border-radius: 5px; font-family: var(--font-cond); font-size: var(--t-xs); letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; pointer-events: none; border-left: 2px solid #ff9a52; }
+.build-panel { margin-top: 14px; display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px 22px; }
+.build-panel .field label { align-items: baseline; }
+.build-panel .fx { font-size: var(--t-xs); color: var(--muted); font-weight: 400; margin-left: 6px; font-variant-numeric: tabular-nums; }
+.build-panel .fx.up { color: var(--clay); }
 .punch { margin-top: 18px; font-size: var(--t-xl); font-weight: 500; line-height: 1.3; max-width: 46ch; }
 .punch b { color: var(--clay); }
 
@@ -208,11 +221,17 @@ footer { padding-block: 28px 40px; color: var(--muted); font-size: var(--t-sm); 
         <p class="eyebrow">Pitching physics · elbow load · UCL risk</p>
         <h1>Same velocity. Very different elbow.</h1>
       </div>
+      <div class="seg modes" id="modes" role="group" aria-label="Mode"><button type="button" data-v="compare" aria-pressed="true">Two real pitchers</button><button type="button" data-v="build">Build your pitcher</button></div>
       <div class="replay" id="replay">
-        <canvas id="gl" aria-label="3D replay of two pitching deliveries reconstructed from motion capture"></canvas>
+        <canvas id="gl" aria-label="3D replay of pitching deliveries reconstructed from motion capture"></canvas>
         <div class="hud" id="hud">
-          <div class="hud-pane"><div class="tag" id="tag-0"></div><div class="meter"><div class="k">Elbow torque</div><div class="v" id="v-0">0<small>Nm</small></div><div class="bar"><span id="b-0"></span></div></div></div>
-          <div class="hud-pane"><div class="tag" id="tag-1"></div><div class="meter"><div class="k">Elbow torque</div><div class="v" id="v-1">0<small>Nm</small></div><div class="bar"><span id="b-1"></span></div></div></div>
+          <div class="hud-pane cmp"><div class="tag" id="tag-0"></div><div class="meter"><div class="k">Elbow torque</div><div class="v" id="v-0">0<small>Nm</small></div><div class="bar"><span id="b-0"></span></div></div></div>
+          <div class="hud-pane cmp"><div class="tag" id="tag-1"></div><div class="meter"><div class="k">Elbow torque</div><div class="v" id="v-1">0<small>Nm</small></div><div class="bar"><span id="b-1"></span></div></div></div>
+          <div class="hud-pane bld" hidden><div class="tag" id="tag-b"></div><div class="meter"><div class="k">Peak elbow torque</div><div class="v" id="v-b">0<small>Nm</small></div><div class="bar"><span id="b-b"></span></div><div class="sub" id="d-b"></div></div></div>
+          <div class="hint" id="hint" hidden>Drag the glowing dots</div>
+          <div class="chip" id="chip-ball" hidden>Layback · elbow bend</div>
+          <div class="chip" id="chip-elbow" hidden>Arm slot</div>
+          <div class="chip" id="chip-head" hidden>Trunk tilt</div>
           <div class="speed-badge" id="speed-badge">¼× speed</div>
           <div class="caption" id="caption" style="opacity:0"></div>
         </div>
@@ -221,8 +240,11 @@ footer { padding-block: 28px 40px; color: var(--muted); font-size: var(--t-sm); 
         <button class="btn primary" id="play" type="button">Pause</button>
         <input class="scrub" id="scrub" type="range" min="0" max="1000" value="0" aria-label="Time in the delivery">
         <div class="seg" id="speed" role="group" aria-label="Speed"><button type="button" data-v="1">Real</button><button type="button" data-v="0.25" aria-pressed="true">¼×</button><button type="button" data-v="0.1">⅒×</button></div>
-        <div class="seg" id="views" role="group" aria-label="Camera"><button type="button" data-v="tv" aria-pressed="true">TV</button><button type="button" data-v="side">Side</button><button type="button" data-v="elbow">Elbow</button></div>
+        <div class="seg" id="views" role="group" aria-label="Camera"><button type="button" data-v="build" hidden>3/4</button><button type="button" data-v="tv" aria-pressed="true">TV</button><button type="button" data-v="side">Side</button><button type="button" data-v="elbow">Elbow</button></div>
+        <button class="btn" id="reset" type="button" hidden>Reset</button>
       </div>
+      <div class="build-panel" id="build-panel" hidden></div>
+      <p class="small muted" id="build-note" style="margin-top:12px" hidden></p>
       <p class="punch" id="punch"></p>
     </div>
   </section>
@@ -246,7 +268,7 @@ footer { padding-block: 28px 40px; color: var(--muted); font-size: var(--t-sm); 
           <ul class="toplist" id="toplist"></ul>
         </div>
       </div>
-      <p class="small muted" style="margin-top:12px">Estimates use only fastball speed, height, weight and pitch count. They don't know a pitcher's mechanics, health or rest days.</p>
+      <p class="small muted" style="margin-top:12px">MLB pitchers can't be motion-captured, so each dot uses the formula the lab physics found: elbow torque ≈ <span id="bridge"></span>. That captures velocity and size but not mechanics, which the lab shows can swing torque by ±15&nbsp;Nm at the same velocity.</p>
     </div>
   </section>
 
@@ -292,6 +314,7 @@ footer { padding-block: 28px 40px; color: var(--muted); font-size: var(--t-sm); 
 <script src="vendor/three.min.js"></script>
 <script>window.THREE || document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"><\/script>');</script>
 <script src="model.js"></script>
+<script src="build.js"></script>
 <script>
 "use strict";
 (async function () {
@@ -301,9 +324,9 @@ footer { padding-block: 28px 40px; color: var(--muted); font-size: var(--t-sm); 
   const pct = (p) => p < 0.001 ? "<0.1%" : p < 0.1 ? fmt(100 * p, 1) + "%" : fmt(100 * p, 0) + "%";
   const ftin = (i) => `${Math.floor(i / 12)}′${i % 12}″`;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let S, A, MLB;
+  let S, A, MLB, BD;
   try {
-    [S, A, MLB] = await Promise.all(["data/site.json", "data/anim.json", "data/mlb.json"].map(u => fetch(u).then(r => r.json())));
+    [S, A, MLB, BD] = await Promise.all(["data/site.json", "data/anim.json", "data/mlb.json", "data/build.json"].map(u => fetch(u).then(r => r.json())));
   } catch (e) {
     $("main").insertAdjacentHTML("afterbegin", '<p class="gutter" style="padding:24px">Data files failed to load. Serve this folder over HTTP instead of opening the file directly.</p>');
     return;
@@ -315,7 +338,8 @@ footer { padding-block: 28px 40px; color: var(--muted); font-size: var(--t-sm); 
 
   /* =================== 3D replay =================== */
   const pitAvg = (u) => { const i = S.pitchers.cols.indexOf("torque"); const r = S.pitchers.rows.find(x => x[0] === u); return r ? r[i] : null; };
-  $("#punch").innerHTML = `Both throw about <b>88&nbsp;mph</b> and weigh about <b>100&nbsp;kg</b>. Pitcher B's elbow takes <b>${fmt(pitAvg(P[1].user) - pitAvg(P[0].user), 0)}&nbsp;Nm</b> more on every pitch.`;
+  const PUNCH_CMP = `Both throw about <b>88&nbsp;mph</b> and weigh about <b>100&nbsp;kg</b>. Pitcher B's elbow takes <b>${fmt(pitAvg(P[1].user) - pitAvg(P[0].user), 0)}&nbsp;Nm</b> more on every pitch.`;
+  $("#punch").innerHTML = PUNCH_CMP;
   P.forEach((p, k) => { $("#tag-" + k).innerHTML = `<i style="background:var(--s${k + 1})"></i>Pitcher ${k ? "B" : "A"} · ${fmt(p.velo, 1)} mph`; });
 
   const THREE = window.THREE;
@@ -437,17 +461,50 @@ footer { padding-block: 28px 40px; color: var(--muted); font-size: var(--t-sm); 
     function setSph(m, a, r) { m.position.copy(a); m.scale.setScalar(r); }
 
     const G = new THREE.Vector3(0, 0, -9.81);
-    const views = P.map((p, k) => {
-      const scene = new THREE.Scene();
-      const sun = buildWorld(scene);
-      const fig = buildFigure(scene, k ? "#d95926" : "#2a78d6");
-      // ball flight after release: aim at the middle of the zone, solve the launch velocity under gravity
-      const last = (n) => V3(p.frames[p.t.findIndex(t => t >= 0)][ji(n)]);
-      const R = last("hand_jc").clone().add(last("hand_jc").sub(last("wrist_jc")).multiplyScalar(0.5));
+    // ball flight after release: aim at the middle of the zone, solve the launch velocity under gravity
+    function launch(p) {
+      const i0 = p.t.findIndex(tt => tt >= 0), at = (n) => V3(p.frames[i0][ji(n)]);
+      const R = at("hand_jc").add(at("hand_jc").sub(at("wrist_jc")).multiplyScalar(0.5));
       const target = new THREE.Vector3(PLATE_X - 0.2, 0, 0.5), speed = p.velo * 0.44704;
       const T = target.distanceTo(R) / (speed * 0.96);
       const v0 = target.clone().sub(R).sub(G.clone().multiplyScalar(0.5 * T * T)).divideScalar(T);
-      return { p, scene, sun, fig, R, v0, T };
+      return { R, v0, T };
+    }
+    const views = P.map((p, k) => {
+      const scene = new THREE.Scene(), sun = buildWorld(scene), fig = buildFigure(scene, k ? "#d95926" : "#2a78d6");
+      return Object.assign({ p, scene, sun, fig }, launch(p));
+    });
+
+    // --- Build your pitcher: one real delivery, re-posed to the mechanics you pick (build.js) ---
+    const BB = BD.base, BM = window.BUILD.make(BB), KN = BD.knobs, K = Object.fromEntries(KN.map(k => [k.key, k]));
+    const val = Object.fromEntries(KN.map(k => [k.key, k.base]));
+    const iEdit = (() => { let b = BM.iMER; const f0 = BB.t.findIndex(x => x >= BB.events.fp_100_time); for (let i = f0; i <= BM.iBR; i++) if (BB.varus[i] > BB.varus[b]) b = i; return b; })();   // peak elbow load
+    const bp = { velo: BB.velo, t: BB.t.slice(), frames: BB.frames, varus: BB.varus.slice(), events: Object.assign({}, BB.events) };
+    const bv = (() => { const scene = new THREE.Scene(), sun = buildWorld(scene), fig = buildFigure(scene, "#b4461c"); return { p: bp, scene, sun, fig }; })();
+    const deltas = (v) => ({ lay: v.layback - K.layback.base, flex: v.flex - K.flex.base, tilt: v.tilt - K.tilt.base, slot: v.slot - K.slot.base });
+    const effect = (key, v = val) => K[key].coef * (v[key] - K[key].base);
+    const torqueOf = (v = val) => BB.peak + KN.reduce((s, k) => s + effect(k.key, v), 0);
+    let tau = BB.peak;
+    function rebuild() {
+      const k = BB.velo / val.velo;                       // a faster pitch is a quicker delivery
+      bp.velo = val.velo; bp.frames = BM.all(deltas(val));
+      bp.t = BB.t.map(x => x * k); for (const e in BB.events) bp.events[e] = BB.events[e] * k;
+      tau = torqueOf(); bp.varus = BB.varus.map(x => x * tau / BB.peak);
+      Object.assign(bv, launch(bp));
+    }
+    const ringTex = canvasTex(128, 128, (g) => {
+      const r = g.createRadialGradient(64, 64, 8, 64, 64, 64); r.addColorStop(0, "rgba(255,170,90,0)"); r.addColorStop(0.5, "rgba(255,140,60,0.45)"); r.addColorStop(1, "rgba(255,110,30,0)");
+      g.fillStyle = r; g.fillRect(0, 0, 128, 128);
+      g.strokeStyle = "rgba(255,255,255,0.95)"; g.lineWidth = 7; g.beginPath(); g.arc(64, 64, 33, 0, Math.PI * 2); g.stroke();
+    });
+    const HANDLES = [
+      { id: "ball", prefs: ["left", "above", "below", "right"], keys: ["layback", "flex"], at: (f) => { const h = V3(f[ji("hand_jc")]); return h.clone().add(h.clone().sub(V3(f[ji("wrist_jc")])).multiplyScalar(0.5)); } },
+      { id: "elbow", prefs: ["below", "right", "left", "above"], keys: ["slot"], at: (f) => V3(f[ji("elbow_jc")]) },
+      { id: "head", prefs: ["above", "right", "left", "below"], keys: ["tilt"], at: (f) => { const a = V3(f[ji("thorax_prox")]), up = a.clone().sub(V3(f[ji("thorax_dist")])).normalize(); return a.addScaledVector(up, 0.21); } },
+    ];
+    HANDLES.forEach(h => {
+      h.sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: ringTex, depthTest: false, depthWrite: false, transparent: true, toneMapped: false }));
+      h.sprite.renderOrder = 10; h.sprite.visible = false; bv.scene.add(h.sprite); h.chip = $("#chip-" + h.id);
     });
 
     function frameAt(p, t) {
@@ -480,7 +537,7 @@ footer { padding-block: 28px 40px; color: var(--muted); font-size: var(--t-sm); 
       // elbow load
       const fi = f.a + (f.b - f.a) * f.u, i0 = Math.floor(fi), i1 = Math.min(i0 + 1, p.varus.length - 1);
       const varus = Math.max(0, p.varus[i0] + (p.varus[i1] - p.varus[i0]) * (fi - i0));
-      const L = Math.min(1, varus / VMAX), heat = Math.max(0, (varus - 60) / (VMAX - 60));
+      const heat = Math.max(0, (varus - 60) / (VMAX - 60));
       setSph(fig.elbow, pts.elbow_jc, 0.058);
       fig.hot.emissiveIntensity = 2.6 * heat * heat; fig.hotJoint.emissiveIntensity = 5 * heat * heat;
       fig.glow.position.copy(pts.elbow_jc); fig.glow.material.opacity = Math.min(1, 1.5 * heat * heat); fig.glow.scale.setScalar((view === "elbow" ? 0.1 : 0.15) + (view === "elbow" ? 0.35 : 0.65) * heat);
@@ -498,32 +555,50 @@ footer { padding-block: 28px 40px; color: var(--muted); font-size: var(--t-sm); 
     const PRESETS = {
       tv:   { pos: new THREE.Vector3(-62, 4.0, 9.6), tgt: new THREE.Vector3(7.5, -0.35, 1.0), fov: 4.3 },
       side: { pos: new THREE.Vector3(1.1, -8.5, 1.35), tgt: new THREE.Vector3(1.0, 0, 1.05), fov: 30 },
+      build: { pos: new THREE.Vector3(3.9, -3.75, 2.35), tgt: new THREE.Vector3(1.0, -0.3, 0.92), fov: 31 },
       elbow: { pos: null, tgt: null, fov: 34 },
     };
-    let view = "tv", cam = { pos: PRESETS.tv.pos.clone(), tgt: PRESETS.tv.tgt.clone(), fov: PRESETS.tv.fov }, camTo = null, orbit = null;
+    let mode = "compare", view = "tv", cam = { pos: PRESETS.tv.pos.clone(), tgt: PRESETS.tv.tgt.clone(), fov: PRESETS.tv.fov }, camTo = null, orbit = null;
     function presetFor(name, poses) {
       if (name !== "elbow") return PRESETS[name];
-      const e = poses[0].elbow.clone().add(poses[1].elbow).multiplyScalar(0.5);
+      const e = poses.reduce((a, q) => a.add(q.elbow), new THREE.Vector3()).multiplyScalar(1 / poses.length);
       return { pos: e.clone().add(new THREE.Vector3(0.6, -2.8, 0.15)), tgt: e.clone().add(new THREE.Vector3(0, 0, -0.15)), fov: 32 };
     }
+    // widen the lens on narrow screens so the pitcher stays in frame
+    function fovFor(f, aspect, half) {
+      if (orbit) return f;
+      if (view === "tv") return f * (half ? 0.8 : Math.max(1, 1.15 / aspect));
+      if (view === "build") return 2 * Math.atan(Math.tan(f * Math.PI / 360) * Math.max(1, 1.3 / aspect) ** 0.7) * 180 / Math.PI;
+      return f;
+    }
+    const toScreen = (p3) => { const q = p3.clone().project(camera); return [(q.x + 1) / 2 * L0.w, (1 - q.y) / 2 * L0.h]; };
 
     // --- time ---
-    const tStart = Math.max(P[0].t[0], P[1].t[0]) + 0.05, tEnd = 0.5;
+    const tStartCmp = Math.max(P[0].t[0], P[1].t[0]) + 0.05, tEnd = 0.5;
     const MER = Math.max(...P.map(p => p.events.MER_time));
-    let t = reduce ? MER : tStart, speed = 0.25, playing = !reduce, last = null, hold = 0, held = false;
-    const EVENTS = [[P[0].events.fp_100_time, "Foot plant"], [P[0].events.MER_time, "Max layback · peak elbow load"], [0, "Release"]];
+    const tStart = () => mode === "build" ? bp.t[0] + 0.05 : tStartCmp;
+    const freezeT = () => mode === "build" ? bp.t[iEdit] : MER - 0.004;      // hold on peak elbow load
+    let t = reduce ? MER : tStartCmp, speed = 0.25, playing = !reduce, last = null, hold = 0, held = false;
+    const events = () => { const e = mode === "build" ? bp.events : P[0].events; return [[e.fp_100_time, "Foot plant"], [e.MER_time, "Max layback · peak elbow load"], [0, "Release"]]; };
+    const editing = () => mode === "build" && !playing && Math.abs(t - bp.t[iEdit]) < 1e-9;
 
     function layout() {
       const w = canvas.clientWidth, h = canvas.clientHeight, dpr = Math.min(devicePixelRatio || 1, 2);
       renderer.setPixelRatio(dpr); renderer.setSize(w, h, false);
-      const stacked = w < 700; hud.classList.toggle("stacked", stacked);
+      const stacked = w < 700; hud.classList.toggle("stacked", stacked && mode === "compare"); hud.classList.toggle("build", mode === "build");
       return { w, h, stacked };
     }
     let L0 = layout();
     new ResizeObserver(() => { L0 = layout(); draw(); }).observe(canvas);
 
+    let drag = null, grab = null, hover = null;
     function draw() {
-      const poses = views.map(v => pose(v, t));
+      const build = mode === "build", list = build ? [bv] : views, ed = editing();
+      const poses = list.map(v => pose(v, t));
+      if (build) HANDLES.forEach(h => {
+        h.sprite.visible = ed;
+        if (ed) { h.sprite.position.copy(h.at(bp.frames[iEdit])); h.sprite.scale.setScalar(grab && grab.h === h ? 0.17 : hover === h ? 0.15 : 0.125); }
+      });
       // camera: preset, smooth transition, or user orbit
       const pre = presetFor(view, poses);
       if (orbit) { cam.pos.copy(orbit.tgt).add(new THREE.Vector3().setFromSphericalCoords(orbit.r, orbit.phi, orbit.theta).applyAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2)); cam.tgt.copy(orbit.tgt); }
@@ -532,21 +607,42 @@ footer { padding-block: 28px 40px; color: var(--muted); font-size: var(--t-sm); 
         cam.pos.lerpVectors(camTo.from.pos, pre.pos, e); cam.tgt.lerpVectors(camTo.from.tgt, pre.tgt, e); cam.fov = camTo.from.fov + (pre.fov - camTo.from.fov) * e;
         if (a >= 1) camTo = null;
       } else { cam.pos.copy(pre.pos); cam.tgt.copy(pre.tgt); cam.fov = pre.fov; }
-      const { w, h, stacked } = L0;
-      views.forEach((v, k) => {
-        const vw = stacked ? w : w / 2, vh = stacked ? h / 2 : h, x = stacked ? 0 : k * vw, y = stacked ? (k ? 0 : h / 2) : 0;
+      const { w, h, stacked } = L0, split = !build;
+      list.forEach((v, k) => {
+        const vw = split && !stacked ? w / 2 : w, vh = split && stacked ? h / 2 : h, x = split && !stacked ? k * vw : 0, y = split && stacked ? (k ? 0 : h / 2) : 0;
         camera.aspect = vw / vh;
-        // keep the TV framing similar when the pane is narrow
-        camera.fov = cam.fov * (view === "tv" && !orbit ? (stacked ? 0.8 : Math.max(1, 1.15 / camera.aspect)) : 1);
+        camera.fov = fovFor(cam.fov, camera.aspect, split && stacked);
         camera.position.copy(cam.pos); camera.lookAt(cam.tgt); camera.updateProjectionMatrix();
         renderer.setViewport(x, y, vw, vh); renderer.setScissor(x, y, vw, vh);
         renderer.render(v.scene, camera);
-        $("#v-" + k).innerHTML = `${fmt(poses[k].varus, 0)}<small>Nm</small>`;
-        $("#b-" + k).style.width = Math.min(100, poses[k].varus / VMAX * 100) + "%";
+        if (split) {
+          $("#v-" + k).innerHTML = `${fmt(poses[k].varus, 0)}<small>Nm</small>`;
+          $("#b-" + k).style.width = Math.min(100, poses[k].varus / VMAX * 100) + "%";
+        }
       });
-      const ev = held ? EVENTS[1] : EVENTS.filter(([te]) => t >= te - 0.002 && t - te < 0.03).pop();
-      $("#caption").style.opacity = ev ? 1 : 0; if (ev) $("#caption").textContent = ev[1];
-      $("#scrub").value = Math.round(1000 * (t - tStart) / (tEnd - tStart));
+      if (build) {
+        $("#v-b").innerHTML = `${fmt(tau, 0)}<small>Nm</small>`;
+        $("#b-b").style.width = Math.min(100, tau / VMAX * 100) + "%";
+        const dd = Math.round(tau - BB.peak);
+        $("#d-b").textContent = dd === 0 ? `the real pitch: ${fmt(BB.peak, 0)} Nm` : `${dd > 0 ? "+" : "−"}${Math.abs(dd)} Nm vs the real pitch`;
+        $("#hint").hidden = !ed; $("#speed-badge").hidden = ed;
+        // label each dot on the first side that stays on screen and clear of the other labels and dots
+        const dots = HANDLES.map(hd => toScreen(hd.sprite.position)), placed = [];
+        HANDLES.forEach((hd, i) => {
+          hd.chip.hidden = !ed; if (!ed) return;
+          const [x, y] = dots[i], cw = hd.chip.offsetWidth, ch = hd.chip.offsetHeight;
+          const at = (sd) => sd === "left" ? [x - 14 - cw, y - ch / 2] : sd === "right" ? [x + 14, y - ch / 2] : sd === "above" ? [x - cw / 2, y - 16 - ch] : [x - cw / 2, y + 16];
+          const clear = (r) => r[0] >= 4 && r[1] >= 4 && r[0] + cw <= w - 4 && r[1] + ch <= h - 4
+            && placed.every(q => r[0] + cw < q[0] || q[0] + q[2] < r[0] || r[1] + ch < q[1] || q[1] + q[3] < r[1])
+            && dots.every(d => d[0] < r[0] - 10 || d[0] > r[0] + cw + 10 || d[1] < r[1] - 10 || d[1] > r[1] + ch + 10);
+          const r = hd.prefs.map(at).find(clear) || at(hd.prefs[0]);
+          placed.push([r[0], r[1], cw, ch]);
+          Object.assign(hd.chip.style, { left: r[0] + "px", top: r[1] + "px" }); hd.chip.dataset.x = x; hd.chip.dataset.y = y;
+        });
+      }
+      const EV = events(), ev = held ? EV[1] : EV.filter(([te]) => t >= te - 0.002 && t - te < 0.03).pop();
+      $("#caption").style.opacity = ev && !ed ? 1 : 0; if (ev) $("#caption").textContent = ev[1];
+      $("#scrub").value = Math.round(1000 * (t - tStart()) / (tEnd - tStart()));
     }
 
     function loop(ts) {
@@ -555,31 +651,98 @@ footer { padding-block: 28px 40px; color: var(--muted); font-size: var(--t-sm); 
         const dt = Math.min(0.05, (ts - last) / 1000);
         if (hold > 0) { hold -= dt; if (hold <= 0) held = false; }
         else {
-          const prev = t; t += dt * speed;
-          if (speed < 1 && prev < MER - 0.004 && t >= MER - 0.004) { t = MER - 0.004; hold = 1.3; held = true; }   // freeze at peak load
-          if (t > tEnd) { t = tStart; }
+          const prev = t, fz = freezeT(); t += dt * speed;
+          if (speed < 1 && prev < fz && t >= fz) { t = fz; hold = 1.3; held = true; }   // freeze at peak load
+          if (t > tEnd) { if (mode === "build") { toEdit(); return; } t = tStart(); }
         }
       }
       last = ts; draw(); requestAnimationFrame(loop);
     }
-    function setPlaying(v) { playing = v; $("#play").textContent = v ? "Pause" : "Play"; if (v) requestAnimationFrame(loop); }
-    $("#play").addEventListener("click", () => setPlaying(!playing));
-    $("#scrub").addEventListener("input", e => { setPlaying(false); hold = 0; held = false; t = tStart + (tEnd - tStart) * e.target.value / 1000; draw(); });
+    function setPlaying(v) { playing = v; $("#play").textContent = mode === "build" ? (v ? "Stop" : "Throw") : (v ? "Pause" : "Play"); if (v) requestAnimationFrame(loop); }
+    function toEdit() { setPlaying(false); hold = 0; held = false; t = bp.t[iEdit]; draw(); }
+    $("#play").addEventListener("click", () => {
+      if (mode !== "build") return setPlaying(!playing);
+      if (playing) return toEdit();
+      t = tStart(); hold = 0; held = false; setPlaying(true);
+    });
+    $("#scrub").addEventListener("input", e => { setPlaying(false); hold = 0; held = false; t = tStart() + (tEnd - tStart()) * e.target.value / 1000; draw(); });
     function seg(id, cb) { const g = $(id); g.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; g.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); cb(b.dataset.v); }); }
     seg("#speed", v => { speed = +v; $("#speed-badge").textContent = speed === 1 ? "Real speed" : speed === 0.25 ? "¼× speed" : "⅒× speed"; });
-    seg("#views", v => { camTo = { from: { pos: cam.pos.clone(), tgt: cam.tgt.clone(), fov: cam.fov }, t0: performance.now() }; orbit = null; view = v; if (!playing) { const tick = () => { draw(); if (camTo) requestAnimationFrame(tick); }; tick(); } });
-    // drag to orbit around the current target
-    let drag = null;
+    function setView(v, animate) {
+      $("#views").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x.dataset.v === v));
+      camTo = animate ? { from: { pos: cam.pos.clone(), tgt: cam.tgt.clone(), fov: cam.fov }, t0: performance.now() } : null; orbit = null; view = v;
+      if (!playing) { const tick = () => { draw(); if (camTo) requestAnimationFrame(tick); }; tick(); }
+    }
+    seg("#views", v => setView(v, true));
+
+    // mode: two real pitchers side by side, or one pitcher you re-pose
+    const PUNCH_BUILD = `Layback matters most: 10° more cuts about <b>${fmt(-10 * K.layback.coef, 0)}&nbsp;Nm</b> at the same speed. Arm slot barely matters.`;
+    $("#build-note").textContent = `Torque = this real pitch's physics (${fmt(BB.peak, 0)} Nm) + how torque differed across ${BD.model.n_pitches} lab pitches with those mechanics. Typical error ±${fmt(BD.model.mae, 0)} Nm. It shows association, not cause.`;
+    $("#build-panel").innerHTML = KN.map(k => `<div class="field"><label for="k-${k.key}" title="${k.hint}"><span>${k.label}<span class="fx" id="fx-${k.key}"></span></span><output id="ko-${k.key}"></output></label><input id="k-${k.key}" type="range" min="${k.min}" max="${k.max}" step="${k.key === "velo" ? 0.1 : 0.5}" value="${k.base}"></div>`).join("");
+    function syncPanel() {
+      KN.forEach(k => {
+        $("#k-" + k.key).value = val[k.key];
+        $("#ko-" + k.key).textContent = fmt(val[k.key], k.key === "velo" ? 1 : 0) + k.unit;
+        const e = Math.round(effect(k.key)), fx = $("#fx-" + k.key);
+        fx.textContent = e === 0 ? "" : `${e > 0 ? "+" : "−"}${Math.abs(e)} Nm`; fx.classList.toggle("up", e > 0);
+      });
+      $("#tag-b").innerHTML = `<i style="background:var(--clay)"></i>Your pitcher · ${fmt(val.velo, 1)} mph`;
+    }
+    function edited() { rebuild(); syncPanel(); if (mode === "build") toEdit(); }
+    KN.forEach(k => $("#k-" + k.key).addEventListener("input", e => { val[k.key] = +e.target.value; edited(); }));
+    $("#reset").addEventListener("click", () => { KN.forEach(k => { val[k.key] = k.base; }); edited(); });
+    function setMode(m) {
+      if (m === mode) return;
+      mode = m; const b = m === "build";
+      document.querySelectorAll(".cmp").forEach(e => { e.hidden = b; }); $(".bld").hidden = !b;
+      ["#build-panel", "#build-note", "#reset"].forEach(s => { $(s).hidden = !b; });
+      $('#views [data-v="build"]').hidden = !b; $('#views [data-v="elbow"]').hidden = b;
+      $("#punch").innerHTML = b ? PUNCH_BUILD : PUNCH_CMP;
+      if (!b) { HANDLES.forEach(h => { h.chip.hidden = true; }); $("#hint").hidden = true; $("#speed-badge").hidden = false; }
+      L0 = layout(); hold = 0; held = false; grab = null; hover = null;
+      setPlaying(false); setView(b ? "build" : "tv", false);
+      if (b) toEdit(); else { t = tStartCmp; if (reduce) { t = MER; draw(); } else setPlaying(true); }
+    }
+    seg("#modes", setMode);
+
+    // drag a glowing dot to re-pose the pitcher (solved through the camera, so it works from any angle),
+    // or drag anywhere else to orbit the camera
+    const local = (e) => { const r = canvas.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    function pick(e) {
+      if (!editing()) return null;
+      const [x, y] = local(e); let best = null, bd = e.pointerType === "touch" ? 36 : 24;
+      HANDLES.forEach(h => { const s = toScreen(h.sprite.position), d = Math.hypot(s[0] - x, s[1] - y); if (d < bd) { bd = d; best = h; } });
+      return best;
+    }
+    const screenOf = (h, v) => toScreen(h.at(BM.frame(iEdit, BM.angles(deltas(v)))));
+    function dragTo(h, target) {   // damped least squares on the dot's screen position
+      for (let it = 0; it < 4; it++) {
+        const s0 = screenOf(h, val), e = [target[0] - s0[0], target[1] - s0[1]];
+        if (Math.hypot(e[0], e[1]) < 0.5) break;
+        const Jc = h.keys.map(k => { const s1 = screenOf(h, Object.assign({}, val, { [k]: val[k] + 1 })); return [s1[0] - s0[0], s1[1] - s0[1]]; });
+        const l2 = 9, a = l2 + Jc.reduce((s, c) => s + c[0] * c[0], 0), b = Jc.reduce((s, c) => s + c[0] * c[1], 0), c2 = l2 + Jc.reduce((s, c) => s + c[1] * c[1], 0), det = a * c2 - b * b;
+        const y0 = (c2 * e[0] - b * e[1]) / det, y1 = (a * e[1] - b * e[0]) / det;
+        h.keys.forEach((k, i) => { const dp = Math.max(-5, Math.min(5, Jc[i][0] * y0 + Jc[i][1] * y1)); val[k] = Math.max(K[k].min, Math.min(K[k].max, val[k] + dp)); });
+      }
+    }
     canvas.addEventListener("pointerdown", e => {
+      const h = pick(e);
+      if (h) { const s = toScreen(h.sprite.position), [x, y] = local(e); grab = { h, off: [s[0] - x, s[1] - y] }; canvas.setPointerCapture(e.pointerId); canvas.style.cursor = "grabbing"; draw(); return; }
       const off = cam.pos.clone().sub(cam.tgt).applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2), s = new THREE.Spherical().setFromVector3(off);
       orbit = { tgt: cam.tgt.clone(), r: s.radius, phi: s.phi, theta: s.theta }; camTo = null;
       drag = { x: e.clientX, y: e.clientY, phi: s.phi, theta: s.theta }; canvas.setPointerCapture(e.pointerId);
       $("#views").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", false));
     });
-    canvas.addEventListener("pointermove", e => { if (!drag) return; orbit.theta = drag.theta - (e.clientX - drag.x) * 0.006; orbit.phi = Math.min(Math.PI - 0.05, Math.max(0.05, drag.phi - (e.clientY - drag.y) * 0.006)); if (!playing) draw(); });
-    canvas.addEventListener("pointerup", () => { drag = null; });
+    canvas.addEventListener("pointermove", e => {
+      if (grab) { const [x, y] = local(e); dragTo(grab.h, [x + grab.off[0], y + grab.off[1]]); edited(); return; }
+      if (!drag) { const h = pick(e); if (h !== hover) { hover = h; canvas.style.cursor = h ? "pointer" : ""; if (editing()) draw(); } return; }
+      orbit.theta = drag.theta - (e.clientX - drag.x) * 0.006; orbit.phi = Math.min(Math.PI - 0.05, Math.max(0.05, drag.phi - (e.clientY - drag.y) * 0.006)); if (!playing) draw();
+    });
+    const release = () => { drag = null; if (grab) { grab = null; canvas.style.cursor = ""; draw(); } };
+    canvas.addEventListener("pointerup", release); canvas.addEventListener("pointercancel", release);
     // pause rendering when off screen
     new IntersectionObserver(es => es.forEach(en => { if (!en.isIntersecting && playing) { setPlaying(false); canvas.dataset.auto = "1"; } else if (en.isIntersecting && canvas.dataset.auto) { delete canvas.dataset.auto; setPlaying(true); } })).observe(canvas);
+    rebuild(); syncPanel();
     draw(); setPlaying(playing);
   }
 
@@ -635,6 +798,8 @@ footer { padding-block: 28px 40px; color: var(--muted); font-size: var(--t-sm); 
   let lw = innerWidth; addEventListener("resize", () => { if (innerWidth !== lw) { lw = innerWidth; drawMap(); } });
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawMap);
   new MutationObserver(drawMap).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  $("#bridge").textContent = `${fmt(SV.coef.pitch_speed_mph, 1)} Nm per mph + ${fmt(SV.coef.mass_kg, 1)} Nm per kg of body weight`;
 
   /* =================== calculator =================== */
   $("#riskbar").innerHTML = [0, 1, 2, 3, 4, 5, 6].map(i => `<span style="background:var(--r${i})"></span>`).join("") + `<div class="mark" id="mark"></div>`;

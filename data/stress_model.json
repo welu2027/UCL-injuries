@@ -1,0 +1,1042 @@
+{
+ "n_pitches": 397,
+ "n_pitchers": 100,
+ "metrics": {
+  "baseline_size_velo": {
+   "r2": 0.37262736801092194,
+   "r2_sd": 0.016122751529058416,
+   "mae": 12.033125829362367
+  },
+  "ridge_all": {
+   "r2": 0.4287318433304244,
+   "r2_sd": 0.05818329810388278,
+   "mae": 11.444448764410666
+  },
+  "gbm_all": {
+   "r2": 0.34978251711305564,
+   "r2_sd": 0.03920115897374083,
+   "mae": 11.872221284133074
+  },
+  "calculator_linear": {
+   "r2": 0.47773437775083555,
+   "r2_sd": 0.023454537863923194,
+   "mae": 11.006070307907597
+  }
+ },
+ "importances": [
+  {
+   "feature": "mass_kg",
+   "label": "Body mass (kg)",
+   "drop_r2": 0.4736766730374393
+  },
+  {
+   "feature": "max_shoulder_external_rotation",
+   "label": "Max layback / shoulder ER (deg)",
+   "drop_r2": 0.05588948114210904
+  },
+  {
+   "feature": "lead_grf_z_max",
+   "label": "Lead leg vertical GRF (N)",
+   "drop_r2": 0.05059877927251942
+  },
+  {
+   "feature": "pitch_speed_mph",
+   "label": "Pitch velocity (mph)",
+   "drop_r2": 0.04184961271980025
+  },
+  {
+   "feature": "shoulder_abduction_fp",
+   "label": "Shoulder abduction at foot plant (deg)",
+   "drop_r2": 0.023736219436530405
+  },
+  {
+   "feature": "stride_angle",
+   "label": "Stride angle, + = closed (deg)",
+   "drop_r2": 0.02157948944802866
+  },
+  {
+   "feature": "peak_elbow_ext_velo",
+   "label": "Peak elbow extension speed (deg/s)",
+   "drop_r2": 0.02067041760157644
+  },
+  {
+   "feature": "shoulder_external_rotation_fp",
+   "label": "Shoulder ER at foot plant (deg)",
+   "drop_r2": 0.014636043940204665
+  },
+  {
+   "feature": "pelvis_rotation_fp",
+   "label": "Pelvis rotation at foot plant (deg)",
+   "drop_r2": 0.010346727027842353
+  },
+  {
+   "feature": "torso_lateral_tilt_fp",
+   "label": "Trunk lateral tilt at foot plant (deg)",
+   "drop_r2": 0.009435955961320327
+  },
+  {
+   "feature": "elbow_flexion_mer",
+   "label": "Elbow flexion at max layback (deg)",
+   "drop_r2": 0.009318721155992155
+  },
+  {
+   "feature": "lead_knee_extension_angular_velo_br",
+   "label": "Lead knee ext. velocity at release (deg/s)",
+   "drop_r2": 0.008603105838828905
+  },
+  {
+   "feature": "t_fp_to_br",
+   "label": "Foot plant \u2192 release time (s)",
+   "drop_r2": 0.00785032731780675
+  },
+  {
+   "feature": "forearm_len_m",
+   "label": "Forearm length (m)",
+   "drop_r2": 0.007829689008898884
+  },
+  {
+   "feature": "torso_rotation_mer",
+   "label": "Trunk rotation at max layback (deg)",
+   "drop_r2": 0.007333729820789193
+  },
+  {
+   "feature": "lead_knee_extension_from_fp_to_br",
+   "label": "Lead knee extension FP\u2192release (deg)",
+   "drop_r2": 0.006708165135133817
+  },
+  {
+   "feature": "height_m",
+   "label": "Height (m)",
+   "drop_r2": 0.0061227302064011686
+  },
+  {
+   "feature": "max_elbow_flexion",
+   "label": "Peak elbow flexion (deg)",
+   "drop_r2": 0.005936374773280052
+  },
+  {
+   "feature": "torso_anterior_tilt_mer",
+   "label": "Trunk forward tilt at max layback (deg)",
+   "drop_r2": 0.005182323911083985
+  },
+  {
+   "feature": "torso_lateral_tilt_mer",
+   "label": "Trunk lateral tilt at max layback (deg)",
+   "drop_r2": 0.0042406319155723245
+  },
+  {
+   "feature": "torso_anterior_tilt_br",
+   "label": "Trunk forward tilt at release (deg)",
+   "drop_r2": 0.0039910635591971725
+  },
+  {
+   "feature": "torso_rotation_fp",
+   "label": "Trunk rotation at foot plant (deg)",
+   "drop_r2": 0.0037496008180127956
+  },
+  {
+   "feature": "arm_slot",
+   "label": "Arm slot (deg)",
+   "drop_r2": 0.002836519984158724
+  },
+  {
+   "feature": "lag_torso_arm",
+   "label": "Trunk\u2192arm peak timing gap (s)",
+   "drop_r2": 0.002117951030257726
+  },
+  {
+   "feature": "peak_pelvis_velo",
+   "label": "Peak pelvis rotation speed (deg/s)",
+   "drop_r2": 0.0020463691013722536
+  },
+  {
+   "feature": "elbow_flexion_fp",
+   "label": "Elbow flexion at foot plant (deg)",
+   "drop_r2": 0.0009102476831845434
+  },
+  {
+   "feature": "lag_pelvis_torso",
+   "label": "Pelvis\u2192trunk peak timing gap (s)",
+   "drop_r2": 0.0007630097098682439
+  },
+  {
+   "feature": "stride_length",
+   "label": "Stride length (% height)",
+   "drop_r2": 0.00010765684862450143
+  },
+  {
+   "feature": "peak_torso_velo",
+   "label": "Peak trunk rotation speed (deg/s)",
+   "drop_r2": -5.4320693037917915e-05
+  },
+  {
+   "feature": "torso_anterior_tilt_fp",
+   "label": "Trunk forward tilt at foot plant (deg)",
+   "drop_r2": -0.00013089665038204263
+  },
+  {
+   "feature": "peak_shoulder_ir_velo",
+   "label": "Peak shoulder IR speed (deg/s)",
+   "drop_r2": -0.0011292366003782322
+  },
+  {
+   "feature": "glove_shoulder_abduction_mer",
+   "label": "Glove-arm abduction at max layback (deg)",
+   "drop_r2": -0.0012720215858259814
+  },
+  {
+   "feature": "rotation_hip_shoulder_separation_fp",
+   "label": "Hip\u2013shoulder separation at foot plant (deg)",
+   "drop_r2": -0.00169289904235281
+  },
+  {
+   "feature": "torso_rotation_min",
+   "label": "Trunk counter-rotation (deg)",
+   "drop_r2": -0.0023738808645227963
+  },
+  {
+   "feature": "torso_lateral_tilt_br",
+   "label": "Trunk lateral tilt at release (deg)",
+   "drop_r2": -0.00282503845237574
+  },
+  {
+   "feature": "max_cog_velo_x",
+   "label": "Peak center-of-mass speed to plate (m/s)",
+   "drop_r2": -0.002878392578722644
+  },
+  {
+   "feature": "max_rotation_hip_shoulder_separation",
+   "label": "Peak hip\u2013shoulder separation (deg)",
+   "drop_r2": -0.0029219932699568575
+  },
+  {
+   "feature": "pelvis_anterior_tilt_fp",
+   "label": "Pelvis anterior tilt at foot plant (deg)",
+   "drop_r2": -0.0031779828277002024
+  },
+  {
+   "feature": "shoulder_horizontal_abduction_fp",
+   "label": "Horizontal abduction at foot plant (deg)",
+   "drop_r2": -0.0043222047525406475
+  },
+  {
+   "feature": "lead_grf_x_max",
+   "label": "Lead leg braking GRF (N)",
+   "drop_r2": -0.004989193518584491
+  },
+  {
+   "feature": "rear_grf_x_max",
+   "label": "Drive leg propulsive GRF (N)",
+   "drop_r2": -0.01770442823957172
+  },
+  {
+   "feature": "max_shoulder_horizontal_abduction",
+   "label": "Peak horizontal abduction / scap load (deg)",
+   "drop_r2": -0.028721661283172023
+  }
+ ],
+ "drivers": [
+  {
+   "feature": "max_shoulder_external_rotation",
+   "label": "Max layback / shoulder ER (deg)",
+   "r": -0.4336190883427231,
+   "lo": -0.5603554974113432,
+   "hi": -0.2925193373275879,
+   "slope_Nm_per_unit": -0.6459892538755615,
+   "sd": 9.931253204781154
+  },
+  {
+   "feature": "stride_angle",
+   "label": "Stride angle, + = closed (deg)",
+   "r": -0.28018781197720116,
+   "lo": -0.4323165800737608,
+   "hi": -0.09502647810656771,
+   "slope_Nm_per_unit": -0.712307478109118,
+   "sd": 5.819728065989161
+  },
+  {
+   "feature": "lead_grf_z_max",
+   "label": "Lead leg vertical GRF (N)",
+   "r": 0.26577412660849087,
+   "lo": 0.001751806166086381,
+   "hi": 0.4867666826052798,
+   "slope_Nm_per_unit": 0.012468908648580128,
+   "sd": 315.35898755181097
+  },
+  {
+   "feature": "pelvis_rotation_fp",
+   "label": "Pelvis rotation at foot plant (deg)",
+   "r": 0.2588805692139837,
+   "lo": 0.05338895116148101,
+   "hi": 0.40924976362547455,
+   "slope_Nm_per_unit": 0.3330610084593076,
+   "sd": 11.49996764085568
+  },
+  {
+   "feature": "peak_elbow_ext_velo",
+   "label": "Peak elbow extension speed (deg/s)",
+   "r": 0.2563519777012122,
+   "lo": 0.11818418276649445,
+   "hi": 0.39436580414897293,
+   "slope_Nm_per_unit": 0.016041298396211878,
+   "sd": 236.4384539767464
+  },
+  {
+   "feature": "torso_lateral_tilt_fp",
+   "label": "Trunk lateral tilt at foot plant (deg)",
+   "r": 0.25256361563090285,
+   "lo": 0.0723722230076951,
+   "hi": 0.438766526290879,
+   "slope_Nm_per_unit": 0.5169080260906456,
+   "sd": 7.229004028785108
+  },
+  {
+   "feature": "torso_rotation_fp",
+   "label": "Trunk rotation at foot plant (deg)",
+   "r": 0.24328440563987627,
+   "lo": 0.06665537317365884,
+   "hi": 0.40204597643029455,
+   "slope_Nm_per_unit": 0.28754532273280153,
+   "sd": 12.517826284280043
+  },
+  {
+   "feature": "torso_lateral_tilt_mer",
+   "label": "Trunk lateral tilt at max layback (deg)",
+   "r": 0.22742130258418797,
+   "lo": 0.026831696266805247,
+   "hi": 0.4064654442871862,
+   "slope_Nm_per_unit": 0.35178261425312696,
+   "sd": 9.564840380221877
+  },
+  {
+   "feature": "glove_shoulder_abduction_mer",
+   "label": "Glove-arm abduction at max layback (deg)",
+   "r": 0.21354380480573415,
+   "lo": 0.04929112330880639,
+   "hi": 0.3833057171068208,
+   "slope_Nm_per_unit": 0.34011121749335904,
+   "sd": 9.289385299409973
+  },
+  {
+   "feature": "torso_lateral_tilt_br",
+   "label": "Trunk lateral tilt at release (deg)",
+   "r": 0.2082649617716389,
+   "lo": -0.013945382719300832,
+   "hi": 0.4004657572414042,
+   "slope_Nm_per_unit": 0.3499399061428221,
+   "sd": 8.805290652933913
+  },
+  {
+   "feature": "shoulder_abduction_fp",
+   "label": "Shoulder abduction at foot plant (deg)",
+   "r": 0.20782476300207128,
+   "lo": 0.041839692614932304,
+   "hi": 0.38138916075164947,
+   "slope_Nm_per_unit": 0.3320598521359101,
+   "sd": 9.259805828065053
+  },
+  {
+   "feature": "torso_rotation_min",
+   "label": "Trunk counter-rotation (deg)",
+   "r": 0.19806755662208192,
+   "lo": 0.06372780961841851,
+   "hi": 0.34298129949548634,
+   "slope_Nm_per_unit": 0.3072572605975433,
+   "sd": 9.537447186830185
+  },
+  {
+   "feature": "torso_anterior_tilt_fp",
+   "label": "Trunk forward tilt at foot plant (deg)",
+   "r": -0.16793696197485292,
+   "lo": -0.3245647808030121,
+   "hi": -0.008586223972003594,
+   "slope_Nm_per_unit": -0.2789439297953637,
+   "sd": 8.907387246819274
+  },
+  {
+   "feature": "torso_rotation_mer",
+   "label": "Trunk rotation at max layback (deg)",
+   "r": 0.1513404378966051,
+   "lo": -0.016981682126088672,
+   "hi": 0.3280218195455582,
+   "slope_Nm_per_unit": 0.2186068114727543,
+   "sd": 10.242648109568284
+  },
+  {
+   "feature": "lag_torso_arm",
+   "label": "Trunk\u2192arm peak timing gap (s)",
+   "r": -0.11501200540606579,
+   "lo": -0.3228092741362892,
+   "hi": 0.10752042597309285,
+   "slope_Nm_per_unit": -141.10360323028297,
+   "sd": 0.012059409097313801
+  },
+  {
+   "feature": "elbow_flexion_fp",
+   "label": "Elbow flexion at foot plant (deg)",
+   "r": 0.10834119293329668,
+   "lo": -0.031035364845336793,
+   "hi": 0.2337264424989743,
+   "slope_Nm_per_unit": 0.09899570005769215,
+   "sd": 16.191915855849818
+  },
+  {
+   "feature": "lead_knee_extension_from_fp_to_br",
+   "label": "Lead knee extension FP\u2192release (deg)",
+   "r": 0.1054442139420994,
+   "lo": -0.1124252778894844,
+   "hi": 0.3314317026268046,
+   "slope_Nm_per_unit": 0.14028274857785766,
+   "sd": 11.12088739515409
+  },
+  {
+   "feature": "forearm_len_m",
+   "label": "Forearm length (m)",
+   "r": 0.10293266936494634,
+   "lo": -0.08490013486311726,
+   "hi": 0.2814565826380816,
+   "slope_Nm_per_unit": 101.87241036314983,
+   "sd": 0.01494918821243793
+  },
+  {
+   "feature": "lead_knee_extension_angular_velo_br",
+   "label": "Lead knee ext. velocity at release (deg/s)",
+   "r": 0.10220145419726481,
+   "lo": -0.09746852189392598,
+   "hi": 0.31128764196273145,
+   "slope_Nm_per_unit": 0.010016078821495765,
+   "sd": 150.9663996845267
+  },
+  {
+   "feature": "peak_shoulder_ir_velo",
+   "label": "Peak shoulder IR speed (deg/s)",
+   "r": 0.09606066232229886,
+   "lo": -0.08355308937128661,
+   "hi": 0.2575421267394056,
+   "slope_Nm_per_unit": 0.004631488771584781,
+   "sd": 306.863982735855
+  },
+  {
+   "feature": "max_cog_velo_x",
+   "label": "Peak center-of-mass speed to plate (m/s)",
+   "r": -0.09598048267241277,
+   "lo": -0.26896595447625615,
+   "hi": 0.05957382813899086,
+   "slope_Nm_per_unit": -5.827150220312934,
+   "sd": 0.24369559089487122
+  },
+  {
+   "feature": "t_fp_to_br",
+   "label": "Foot plant \u2192 release time (s)",
+   "r": -0.09350129074221031,
+   "lo": -0.31447630667946785,
+   "hi": 0.06167080626634425,
+   "slope_Nm_per_unit": -62.791921511098025,
+   "sd": 0.022031029352941465
+  },
+  {
+   "feature": "stride_length",
+   "label": "Stride length (% height)",
+   "r": -0.08810852762334138,
+   "lo": -0.26630405292562387,
+   "hi": 0.09909454364893301,
+   "slope_Nm_per_unit": -23.219905385765077,
+   "sd": 0.05614078154472041
+  },
+  {
+   "feature": "lead_grf_x_max",
+   "label": "Lead leg braking GRF (N)",
+   "r": 0.08690065883569091,
+   "lo": -0.1900930728696134,
+   "hi": 0.3159149837948938,
+   "slope_Nm_per_unit": 0.006729353593547341,
+   "sd": 191.06039723166808
+  },
+  {
+   "feature": "pelvis_anterior_tilt_fp",
+   "label": "Pelvis anterior tilt at foot plant (deg)",
+   "r": 0.082000275304065,
+   "lo": -0.09291928290932043,
+   "hi": 0.2591730225747554,
+   "slope_Nm_per_unit": 0.16762928309883798,
+   "sd": 7.237463374498964
+  },
+  {
+   "feature": "arm_slot",
+   "label": "Arm slot (deg)",
+   "r": 0.08154105594215465,
+   "lo": -0.0996615288528889,
+   "hi": 0.2526548407464002,
+   "slope_Nm_per_unit": 0.1642370464777139,
+   "sd": 7.345581150405666
+  },
+  {
+   "feature": "max_rotation_hip_shoulder_separation",
+   "label": "Peak hip\u2013shoulder separation (deg)",
+   "r": 0.0615453801685083,
+   "lo": -0.14508895621167262,
+   "hi": 0.26287615299357847,
+   "slope_Nm_per_unit": 0.13943441113655616,
+   "sd": 6.530500213198253
+  },
+  {
+   "feature": "peak_torso_velo",
+   "label": "Peak trunk rotation speed (deg/s)",
+   "r": 0.06013649343925621,
+   "lo": -0.12753505816789598,
+   "hi": 0.25628455219204727,
+   "slope_Nm_per_unit": 0.010438360100032589,
+   "sd": 85.23673035122465
+  },
+  {
+   "feature": "elbow_flexion_mer",
+   "label": "Elbow flexion at max layback (deg)",
+   "r": 0.05937021720739052,
+   "lo": -0.16717226459440745,
+   "hi": 0.26016900546886945,
+   "slope_Nm_per_unit": 0.10914579205036161,
+   "sd": 8.04790047809745
+  },
+  {
+   "feature": "torso_anterior_tilt_mer",
+   "label": "Trunk forward tilt at max layback (deg)",
+   "r": -0.05404156616643002,
+   "lo": -0.2528642793176753,
+   "hi": 0.12648449087509903,
+   "slope_Nm_per_unit": -0.07513835371875467,
+   "sd": 10.641116733780223
+  },
+  {
+   "feature": "max_shoulder_horizontal_abduction",
+   "label": "Peak horizontal abduction / scap load (deg)",
+   "r": -0.04521763509500609,
+   "lo": -0.22565164462632467,
+   "hi": 0.11851711792924331,
+   "slope_Nm_per_unit": -0.054767716971475464,
+   "sd": 12.215300733247043
+  },
+  {
+   "feature": "rear_grf_x_max",
+   "label": "Drive leg propulsive GRF (N)",
+   "r": 0.036250736752417634,
+   "lo": -0.2287468334839221,
+   "hi": 0.30714025387125515,
+   "slope_Nm_per_unit": 0.0036948156744871746,
+   "sd": 145.15935049836622
+  },
+  {
+   "feature": "peak_pelvis_velo",
+   "label": "Peak pelvis rotation speed (deg/s)",
+   "r": -0.026085609837859017,
+   "lo": -0.1846778858435901,
+   "hi": 0.13247169876852463,
+   "slope_Nm_per_unit": -0.004221680296317065,
+   "sd": 91.41903000034087
+  },
+  {
+   "feature": "torso_anterior_tilt_br",
+   "label": "Trunk forward tilt at release (deg)",
+   "r": -0.015634442068435138,
+   "lo": -0.21599932605151315,
+   "hi": 0.17624918595460448,
+   "slope_Nm_per_unit": -0.022259417365536754,
+   "sd": 10.39177060289486
+  },
+  {
+   "feature": "shoulder_horizontal_abduction_fp",
+   "label": "Horizontal abduction at foot plant (deg)",
+   "r": -0.01469856421992581,
+   "lo": -0.21552852686664464,
+   "hi": 0.15938631173880002,
+   "slope_Nm_per_unit": -0.016209406989916762,
+   "sd": 13.416175897912492
+  },
+  {
+   "feature": "max_elbow_flexion",
+   "label": "Peak elbow flexion (deg)",
+   "r": 0.011916500306815687,
+   "lo": -0.14121591579963028,
+   "hi": 0.1673504035420604,
+   "slope_Nm_per_unit": 0.017558657967554462,
+   "sd": 10.041032333583985
+  },
+  {
+   "feature": "rotation_hip_shoulder_separation_fp",
+   "label": "Hip\u2013shoulder separation at foot plant (deg)",
+   "r": -0.011266880459991609,
+   "lo": -0.22626899973875958,
+   "hi": 0.19032669965051033,
+   "slope_Nm_per_unit": -0.024892499578132807,
+   "sd": 6.696627381306205
+  },
+  {
+   "feature": "lag_pelvis_torso",
+   "label": "Pelvis\u2192trunk peak timing gap (s)",
+   "r": -0.009970037421747542,
+   "lo": -0.13155652307331916,
+   "hi": 0.12998266938463374,
+   "slope_Nm_per_unit": -7.741187545224157,
+   "sd": 0.01905505275035319
+  },
+  {
+   "feature": "shoulder_external_rotation_fp",
+   "label": "Shoulder ER at foot plant (deg)",
+   "r": -0.009422727504433234,
+   "lo": -0.17826559617110546,
+   "hi": 0.17042187787750135,
+   "slope_Nm_per_unit": -0.006927503607434847,
+   "sd": 20.124302068285786
+  }
+ ],
+ "pdp": [
+  {
+   "feature": "mass_kg",
+   "label": "Body mass (kg)",
+   "x": [
+    76.2048,
+    77.5202,
+    78.8357,
+    80.1511,
+    81.4666,
+    82.782,
+    84.0974,
+    85.4129,
+    86.7283,
+    88.0438,
+    89.3592,
+    90.6746,
+    91.9901,
+    93.3055,
+    94.621,
+    95.9364,
+    97.2518,
+    98.5673,
+    99.8827,
+    101.1982,
+    102.5136,
+    103.829,
+    105.1445,
+    106.4599,
+    107.7754
+   ],
+   "y": [
+    97.46,
+    98.29,
+    98.29,
+    100.0,
+    100.07,
+    100.07,
+    100.07,
+    101.41,
+    106.99,
+    107.04,
+    107.04,
+    118.12,
+    118.21,
+    118.37,
+    118.4,
+    118.41,
+    118.59,
+    118.56,
+    118.56,
+    120.1,
+    120.1,
+    122.11,
+    122.12,
+    121.67,
+    121.62
+   ]
+  },
+  {
+   "feature": "max_shoulder_external_rotation",
+   "label": "Max layback / shoulder ER (deg)",
+   "x": [
+    150.4265,
+    151.8566,
+    153.2868,
+    154.7169,
+    156.1471,
+    157.5772,
+    159.0074,
+    160.4375,
+    161.8677,
+    163.2978,
+    164.728,
+    166.1581,
+    167.5883,
+    169.0185,
+    170.4486,
+    171.8788,
+    173.3089,
+    174.7391,
+    176.1692,
+    177.5994,
+    179.0295,
+    180.4597,
+    181.8898,
+    183.32,
+    184.7501
+   ],
+   "y": [
+    113.28,
+    113.28,
+    113.28,
+    113.28,
+    113.28,
+    113.15,
+    112.85,
+    112.82,
+    112.57,
+    112.17,
+    109.6,
+    109.47,
+    109.44,
+    108.7,
+    108.74,
+    108.09,
+    107.6,
+    107.53,
+    107.28,
+    107.28,
+    106.94,
+    106.94,
+    106.82,
+    106.83,
+    106.78
+   ]
+  },
+  {
+   "feature": "lead_grf_z_max",
+   "label": "Lead leg vertical GRF (N)",
+   "x": [
+    1403.4538,
+    1443.6396,
+    1483.8253,
+    1524.011,
+    1564.1968,
+    1604.3825,
+    1644.5683,
+    1684.754,
+    1724.9398,
+    1765.1255,
+    1805.3112,
+    1845.497,
+    1885.6827,
+    1925.8685,
+    1966.0542,
+    2006.24,
+    2046.4257,
+    2086.6114,
+    2126.7972,
+    2166.9829,
+    2207.1687,
+    2247.3544,
+    2287.5402,
+    2327.7259,
+    2367.9116
+   ],
+   "y": [
+    108.81,
+    108.77,
+    108.77,
+    108.75,
+    108.75,
+    108.21,
+    108.6,
+    108.32,
+    108.29,
+    108.34,
+    108.34,
+    108.39,
+    108.53,
+    108.85,
+    109.13,
+    109.3,
+    109.4,
+    109.4,
+    109.4,
+    109.41,
+    109.47,
+    109.47,
+    114.4,
+    114.4,
+    113.98
+   ]
+  },
+  {
+   "feature": "pitch_speed_mph",
+   "label": "Pitch velocity (mph)",
+   "x": [
+    76.88,
+    77.4858,
+    78.0917,
+    78.6975,
+    79.3033,
+    79.9092,
+    80.515,
+    81.1208,
+    81.7267,
+    82.3325,
+    82.9383,
+    83.5442,
+    84.15,
+    84.7558,
+    85.3617,
+    85.9675,
+    86.5733,
+    87.1792,
+    87.785,
+    88.3908,
+    88.9967,
+    89.6025,
+    90.2083,
+    90.8142,
+    91.42
+   ],
+   "y": [
+    105.15,
+    105.15,
+    105.14,
+    105.26,
+    105.55,
+    105.55,
+    105.55,
+    106.08,
+    106.86,
+    106.86,
+    108.0,
+    108.05,
+    108.66,
+    109.74,
+    110.39,
+    111.8,
+    113.28,
+    113.36,
+    113.46,
+    113.36,
+    113.36,
+    113.35,
+    113.34,
+    113.34,
+    113.4
+   ]
+  },
+  {
+   "feature": "shoulder_abduction_fp",
+   "label": "Shoulder abduction at foot plant (deg)",
+   "x": [
+    72.5746,
+    73.7679,
+    74.9613,
+    76.1546,
+    77.348,
+    78.5413,
+    79.7347,
+    80.928,
+    82.1214,
+    83.3147,
+    84.508,
+    85.7014,
+    86.8947,
+    88.0881,
+    89.2814,
+    90.4748,
+    91.6681,
+    92.8615,
+    94.0548,
+    95.2482,
+    96.4415,
+    97.6348,
+    98.8282,
+    100.0215,
+    101.2149
+   ],
+   "y": [
+    107.95,
+    107.95,
+    107.96,
+    107.96,
+    107.96,
+    107.96,
+    107.96,
+    108.15,
+    109.24,
+    109.45,
+    109.49,
+    109.54,
+    109.85,
+    109.96,
+    109.97,
+    110.08,
+    110.1,
+    110.38,
+    110.51,
+    110.49,
+    110.5,
+    110.5,
+    110.5,
+    110.5,
+    110.5
+   ]
+  },
+  {
+   "feature": "stride_angle",
+   "label": "Stride angle, + = closed (deg)",
+   "x": [
+    -8.2432,
+    -7.4163,
+    -6.5894,
+    -5.7625,
+    -4.9355,
+    -4.1086,
+    -3.2817,
+    -2.4547,
+    -1.6278,
+    -0.8009,
+    0.0261,
+    0.853,
+    1.6799,
+    2.5068,
+    3.3338,
+    4.1607,
+    4.9876,
+    5.8146,
+    6.6415,
+    7.4684,
+    8.2953,
+    9.1223,
+    9.9492,
+    10.7761,
+    11.6031
+   ],
+   "y": [
+    113.13,
+    113.13,
+    113.13,
+    113.2,
+    113.2,
+    113.21,
+    113.22,
+    111.26,
+    111.06,
+    110.83,
+    110.85,
+    109.69,
+    109.71,
+    109.64,
+    107.2,
+    106.9,
+    106.85,
+    106.81,
+    106.88,
+    106.88,
+    106.89,
+    106.89,
+    106.89,
+    106.89,
+    106.89
+   ]
+  }
+ ],
+ "calculator": {
+  "features": [
+   "pitch_speed_mph",
+   "mass_kg",
+   "height_m",
+   "max_shoulder_external_rotation",
+   "elbow_flexion_mer",
+   "torso_lateral_tilt_mer",
+   "arm_slot",
+   "max_shoulder_horizontal_abduction",
+   "lag_torso_arm"
+  ],
+  "labels": [
+   "Pitch velocity (mph)",
+   "Body mass (kg)",
+   "Height (m)",
+   "Max layback / shoulder ER (deg)",
+   "Elbow flexion at max layback (deg)",
+   "Trunk lateral tilt at max layback (deg)",
+   "Arm slot (deg)",
+   "Peak horizontal abduction / scap load (deg)",
+   "Trunk\u2192arm peak timing gap (s)"
+  ],
+  "mean": [
+   84.76725,
+   90.43093,
+   1.85119,
+   169.23842,
+   92.21969,
+   23.46543,
+   42.08335,
+   48.63504,
+   0.08479
+  ],
+  "scale": [
+   4.65908,
+   9.77476,
+   0.06996,
+   9.7668,
+   8.0544,
+   9.73525,
+   7.44822,
+   12.27472,
+   0.01306
+  ],
+  "coef": [
+   8.31467,
+   6.84352,
+   2.57988,
+   -7.53924,
+   3.54311,
+   2.58688,
+   -0.59092,
+   2.2474,
+   -0.37578
+  ],
+  "intercept": 109.33849332352027,
+  "defaults": [
+   85.3,
+   88.906,
+   1.854,
+   169.431,
+   92.639,
+   23.046,
+   42.139,
+   51.104,
+   0.086
+  ],
+  "p5": [
+   76.88,
+   76.205,
+   1.742,
+   150.426,
+   77.809,
+   5.999,
+   27.976,
+   25.503,
+   0.064
+  ],
+  "p95": [
+   91.42,
+   107.775,
+   1.981,
+   184.75,
+   104.546,
+   40.047,
+   53.25,
+   66.833,
+   0.105
+  ],
+  "resid_sd": 14.433250254040189,
+  "alpha": 12.689610031679234
+ },
+ "size_velo_coef": {
+  "intercept": -102.49177477748837,
+  "coef": {
+   "pitch_speed_mph": 1.4338,
+   "mass_kg": 1.0184,
+   "height_m": -0.9716
+  }
+ }
+}
