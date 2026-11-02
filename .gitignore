@@ -1,0 +1,12 @@
+# raw downloads and large intermediate tables (re-create with pipeline/run_all.sh)
+data/raw/
+data/*.parquet
+__pycache__/
+.DS_Store
+.vercel/
+.wrangler/
+node_modules/
+
+# video experiment: large simulated clips and the MediaPipe runtime (see experiments/video/README.md)
+data/video_sim.jsonl
+experiments/video/vendor/
